@@ -5,315 +5,320 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Evan Rose</title>
   <style>
-    :root {
-      --bg: #f8f9fa;
-      --text: #111111;
-      --link: #2563eb;
-      --cursor-fill: #111111;
-      --btn-bg: #e9ecef;
-      --btn-text: #111111;
-      --btn-shadow: 0 4px 0 #ced4da;
-      --term-bg: #1a1d23;
-      --term-text: #e4e4e7;
-      --term-border: #2d3139;
-      --term-prompt: #22c55e;
-      --term-header: #252830;
-      --term-caret: #e4e4e7;
-    }
-    body.dark {
-      --bg: #0f172a;
-      --text: #e2e8f0;
-      --link: #93c5fd;
-      --cursor-fill: #e2e8f0;
-      --btn-bg: #1e293b;
-      --btn-text: #e2e8f0;
-      --btn-shadow: 0 4px 0 #0c1222;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
       height: 100%;
-      margin: 0;
-      transition: background-color 0.35s ease, color 0.35s ease;
+      background: #0a0a0a;
+      color: #d4d4d4;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 14px;
+      line-height: 1.65;
     }
+
     body {
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 3l14 9-7 12-2-9z'/%3E%3C/svg%3E") 4 4, auto;
-    }
-    body.dark {
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 3l14 9-7 12-2-9z'/%3E%3C/svg%3E") 4 4, auto;
-    }
-    .content {
-      text-align: left;
-      line-height: 1.6;
-      font-size: 20px;
-      white-space: pre-line;
-    }
-    a {
-      color: var(--link);
-      transition: color 0.35s ease;
-    }
-    .page-wrap {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      min-height: 100%;
-      padding: 1.5rem;
-      padding-left: 4rem;
-      box-sizing: border-box;
-    }
-    .terminal {
-      width: 100%;
-      max-width: 42rem;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      background: var(--term-bg);
-      color: var(--term-text);
-      border-radius: 8px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-      overflow: hidden;
-      border: 1px solid var(--term-border);
-    }
-    .terminal-header {
-      padding: 0.5rem 0.75rem;
-      background: var(--term-header);
-      color: var(--term-text);
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .terminal-header .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .terminal-header .dot.red { background: #ef4444; }
-    .terminal-header .dot.yellow { background: #eab308; }
-    .terminal-header .dot.green { background: #22c55e; }
-    .terminal-body {
-      padding: 1rem 1.25rem 1.25rem;
-      min-height: 280px;
-    }
-    .terminal-line {
-      margin-bottom: 0.35rem;
-      word-break: break-word;
-    }
-    .terminal-line .prompt {
-      color: var(--term-prompt);
-      margin-right: 0.35rem;
-    }
-    .terminal-line .cmd { color: #fbbf24; }
-    .terminal-line .output { color: var(--term-text); }
-    .terminal-line .output a { color: #7dd3fc; }
-    .terminal-line .output.output-err { color: #f87171; }
-    .terminal-input-line {
-      display: flex;
-      align-items: center;
-      margin-top: 0.5rem;
-      gap: 0.25rem;
-    }
-    .terminal-input-line .prompt {
-      color: var(--term-prompt);
-      flex-shrink: 0;
-    }
-    .terminal-input-line input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--term-text);
-      font-family: inherit;
-      font-size: inherit;
-      outline: none;
-      caret-color: var(--term-caret);
-    }
-    .theme-toggle-wrap {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      z-index: 10;
-    }
-    .theme-btn {
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1rem;
-      font-size: 0.9rem;
-      font-family: inherit;
-      font-weight: 500;
-      color: var(--btn-text);
-      background: var(--btn-bg);
-      border: none;
+      overflow: hidden;
+    }
+
+    /* dot-grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.033) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.055) 2px,
+        rgba(0,0,0,0.055) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .terminal {
+      position: relative;
+      z-index: 1;
+      width: min(700px, calc(100vw - 2rem));
+      height: min(500px, calc(100vh - 3rem));
+      display: flex;
+      flex-direction: column;
+      background: #111111;
+      border: 1px solid #1e1e1e;
       border-radius: 10px;
-      box-shadow: var(--btn-shadow);
-      cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.35s ease, color 0.35s ease;
-      user-select: none;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03),
+        0 40px 80px rgba(0,0,0,0.7),
+        0 16px 32px rgba(0,0,0,0.4);
+      animation: appear 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-    .theme-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 0 #c4c8cc;
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(18px) scale(0.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    body.dark .theme-btn:hover {
-      box-shadow: 0 5px 0 #0a0f1a;
+
+    /* titlebar */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      padding: 0.7rem 1rem;
+      background: #161616;
+      border-bottom: 1px solid #1e1e1e;
+      flex-shrink: 0;
+      gap: 6px;
     }
-    .theme-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #b1b8c0;
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
+
+    .titlebar-label {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: #3d3d3d;
+      letter-spacing: 0.04em;
     }
-    body.dark .theme-btn:active {
-      box-shadow: 0 1px 0 #050810;
+
+    /* scroll area */
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem 0.25rem;
+      scrollbar-width: thin;
+      scrollbar-color: #222 transparent;
     }
-    .theme-btn svg {
-      width: 1.1rem;
-      height: 1.1rem;
+
+    .body::-webkit-scrollbar { width: 3px; }
+    .body::-webkit-scrollbar-track { background: transparent; }
+    .body::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+    /* output lines */
+    .line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0 0.5rem;
+      min-height: 1.65em;
+      animation: fadeIn 0.2s ease both;
     }
-    .theme-btn .moon {
-      display: none;
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
-    body.dark .theme-btn .sun {
-      display: none;
+
+    .spacer { height: 0.6rem; }
+
+    .p   { color: #4ade80; flex-shrink: 0; user-select: none; }
+    .c   { color: #fb923c; }
+    .o   { color: #d4d4d4; width: 100%; }
+    .e   { color: #f87171; width: 100%; }
+
+    .o a { color: #60a5fa; text-decoration: none; }
+    .o a:hover { text-decoration: underline; }
+
+    /* input row */
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.5rem 1.25rem;
+      flex-shrink: 0;
     }
-    body.dark .theme-btn .moon {
-      display: block;
+
+    .input-ps1 { color: #4ade80; user-select: none; flex-shrink: 0; }
+
+    .input-row input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #d4d4d4;
+      font: inherit;
+      caret-color: #d4d4d4;
     }
   </style>
-  <meta name="description" content="Hi I'm Evan Rose. More about me coming soon.">
+  <meta name="description" content="Evan Rose">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="data:,">
-  </head>
+</head>
 <body>
-  <div class="theme-toggle-wrap">
-    <button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle dark mode">
-      <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-      <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <span id="theme-label">Dark</span>
-    </button>
-  </div>
-  <div class="page-wrap">
-    <div class="terminal">
-      <div class="terminal-header">
-        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-        <span>evan@rose ~</span>
-      </div>
-      <div class="terminal-body">
-        <div class="terminal-output" id="terminal-output">
-          <div class="terminal-line">
-            <span class="prompt">evan@rose:~$</span>
-            <span class="output">Type <span class="cmd">help</span> for commands.</span>
-          </div>
-        </div>
-        <div class="terminal-input-line">
-          <span class="prompt">evan@rose:~$</span>
-          <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" placeholder=" " autofocus>
-        </div>
-      </div>
+  <div class="terminal">
+    <div class="titlebar">
+      <span class="dot r"></span>
+      <span class="dot y"></span>
+      <span class="dot g"></span>
+      <span class="titlebar-label">evan@rose — ~</span>
+    </div>
+    <div class="body" id="body">
+      <div id="output"></div>
+    </div>
+    <div class="input-row">
+      <span class="input-ps1">evan@rose:~$</span>
+      <input id="input" type="text" autocomplete="off" spellcheck="false" autofocus>
     </div>
   </div>
+
   <script>
-    (function () {
-      const STORAGE_KEY = 'theme';
-      const btn = document.getElementById('theme-btn');
-      const label = document.getElementById('theme-label');
+  (function () {
+    const out   = document.getElementById('output');
+    const input = document.getElementById('input');
+    const body  = document.getElementById('body');
+    const PS1   = 'evan@rose:~$';
 
-      function isDark() {
-        return document.body.classList.contains('dark');
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function line(prompt, cmd, content, cls) {
+      const el = document.createElement('div');
+      el.className = 'line';
+      let h = '';
+      if (prompt)  h += `<span class="p">${esc(prompt)}</span>`;
+      if (cmd)     h += `<span class="c">${esc(cmd)}</span>`;
+      if (content) h += `<span class="${cls || 'o'}">${content}</span>`;
+      el.innerHTML = h;
+      out.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function print(html, cls) { line(null, null, html, cls); }
+    function space() {
+      const e = document.createElement('div');
+      e.className = 'spacer';
+      out.appendChild(e);
+    }
+
+    const cmds = {
+      help() {
+        space();
+        print('commands:');
+        print('  <span class="c">about</span>    who i am');
+        print('  <span class="c">contact</span>  get in touch');
+        print('  <span class="c">links</span>    around the web');
+        print('  <span class="c">clear</span>    clear terminal');
+        print('  <span class="c">help</span>     this message');
+        space();
+      },
+      about() {
+        space();
+        print("i'm evan rose.");
+        space();
+        print('i worked on <a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a> this summer.');
+        space();
+        print('humanity now faces the most important project ever:');
+        print('<span style="color:#fb923c">general purpose robotics.</span>');
+        space();
+        print('i want to help make this a reality — through careful');
+        print('implementation, deliberate design, and worldwide collaboration.');
+        space();
+      },
+      contact() {
+        space();
+        print('<a href="mailto:evanrose@ucla.edu">evanrose@ucla.edu</a>');
+        space();
+      },
+      links() {
+        space();
+        print('<a href="https://x.com/evanr0se" target="_blank" rel="noopener">x.com/evanr0se</a>');
+        print('<a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin.com/in/evanucla</a>');
+        print('<a href="https://www.build.ai/" target="_blank" rel="noopener">build.ai</a>');
+        space();
+      },
+      clear() {
+        out.innerHTML = '';
+      },
+      whoami() { print('evan rose'); },
+      date()   { print(new Date().toLocaleString()); },
+      echo(args) { if (args.length) print(esc(args.join(' '))); },
+      sudo() {
+        space();
+        print('evan is not in the sudoers file.', 'e');
+        print('this incident will be reported.', 'e');
+        space();
+      },
+    };
+
+    function run(raw) {
+      const parts = raw.trim().split(/\s+/);
+      const cmd = parts[0].toLowerCase();
+      const args = parts.slice(1);
+      if (!cmd) return;
+      line(PS1, cmd + (args.length ? ' ' + args.join(' ') : ''));
+      if (cmds[cmd]) {
+        cmds[cmd](args);
+      } else {
+        space();
+        print(`command not found: <span class="c">${esc(cmd)}</span> — try <span class="c">help</span>`, 'e');
+        space();
       }
+    }
 
-      function applyTheme(dark) {
-        document.body.classList.toggle('dark', dark);
-        label.textContent = dark ? 'Light' : 'Dark';
-        try { localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light'); } catch (_) {}
+    /* history */
+    const hist = [];
+    let hi = -1;
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const v = input.value;
+        input.value = '';
+        hi = -1;
+        if (v.trim()) hist.unshift(v);
+        run(v);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (hi < hist.length - 1) input.value = hist[++hi];
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        hi > 0 ? (input.value = hist[--hi]) : (hi = -1, input.value = '');
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        const v = input.value.toLowerCase().trim();
+        if (!v) return;
+        const match = Object.keys(cmds).find(k => k.startsWith(v));
+        if (match) input.value = match;
       }
+    });
 
-      const saved = typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY);
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialDark = saved === 'dark' || (!saved && prefersDark);
-      applyTheme(initialDark);
+    document.addEventListener('click', () => input.focus());
 
-      btn.addEventListener('click', function () {
-        applyTheme(!isDark());
-      });
-    })();
-
-    (function () {
-      const output = document.getElementById('terminal-output');
-      const input = document.getElementById('terminal-input');
-
-      function promptStr() { return 'evan@rose:~$'; }
-
-      function appendLine(cmd, out, isError) {
-        const wrap = document.createElement('div');
-        wrap.className = 'terminal-line';
-        wrap.innerHTML =
-          '<span class="prompt">' + promptStr() + '</span>' +
-          (cmd ? '<span class="cmd">' + escapeHtml(cmd) + '</span>' : '') +
-          (out ? '<div class="output' + (isError ? ' output-err' : '') + '">' + out + '</div>' : '');
-        output.appendChild(wrap);
-        output.scrollTop = output.scrollHeight;
-      }
-
-      function escapeHtml(s) {
-        const div = document.createElement('div');
-        div.textContent = s;
-        return div.innerHTML;
-      }
-
-      const commands = {
-        help: function () {
-          return 'Available commands:<br>' +
-            '  <span class="cmd">about</span>   — who I am & what I care about<br>' +
-            '  <span class="cmd">contact</span> — how to reach me<br>' +
-            '  <span class="cmd">links</span>   — x, linkedin, build ai<br>' +
-            '  <span class="cmd">theme</span>   — toggle dark/light mode<br>' +
-            '  <span class="cmd">clear</span>   — clear terminal<br>' +
-            '  <span class="cmd">help</span>    — this message';
-        },
-        about: function () {
-          return "I'm Evan Rose. I worked on <a href=\"https://www.build.ai/\" target=\"_blank\" rel=\"noopener\">build ai</a> this summer.<br>" +
-            "Humanity now faces the most important project ever: general purpose robotics.<br>" +
-            "I want to make this a reality while regarding implementation, design, and worldwide collaboration.";
-        },
-        contact: function () {
-          return 'Contact me at <a href="mailto:evanrose@ucla.edu">evanrose@ucla.edu</a>';
-        },
-        links: function () {
-          return '<a href="https://x.com/evanr0se" target="_blank" rel="noopener">x</a> | ' +
-            '<a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin</a> | ' +
-            '<a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a>';
-        },
-        theme: function () {
-          document.getElementById('theme-btn').click();
-          return 'Toggled theme.';
-        },
-        clear: function () {
-          output.innerHTML = '';
-          return null;
+    /* auto-type intro */
+    function typeCmd(cmd, cb) {
+      let i = 0;
+      input.value = '';
+      const t = setInterval(() => {
+        input.value += cmd[i++];
+        if (i >= cmd.length) {
+          clearInterval(t);
+          setTimeout(() => { run(cmd); input.value = ''; cb && cb(); }, 240);
         }
-      };
+      }, 55);
+    }
 
-      function runCommand(cmd) {
-        const t = cmd.trim().toLowerCase();
-        if (!t) return;
-        if (commands[t] !== undefined) {
-          const result = commands[t]();
-          if (result !== null) appendLine(cmd, result);
-        } else {
-          appendLine(cmd, "Command not found: " + t + ". Type <span class=\"cmd\">help</span> for commands.", true);
-        }
-      }
-
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          const val = input.value;
-          input.value = '';
-          runCommand(val);
-        }
-      });
-    })();
+    setTimeout(() => typeCmd('about'), 700);
+  })();
   </script>
 </body>
 </html>
-
-
