@@ -99,6 +99,29 @@
       letter-spacing: 0.04em;
     }
 
+    .titlebar-links {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 12px;
+    }
+
+    .titlebar-links button,
+    .command-chip {
+      color: #737373;
+      background: none;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .titlebar-links button:hover,
+    .titlebar-links button:focus-visible,
+    .command-chip:hover,
+    .command-chip:focus-visible {
+      color: #d4d4d4;
+      outline: none;
+    }
+
     /* scroll area */
     .body {
       flex: 1;
@@ -137,6 +160,32 @@
     .o a { color: #60a5fa; text-decoration: none; }
     .o a:hover { text-decoration: underline; }
 
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.15rem 0 0.25rem;
+    }
+
+    .command-chip {
+      color: #d4d4d4;
+      border: 1px solid #2a2a2a;
+      border-radius: 999px;
+      padding: 0.18rem 0.55rem;
+      background: #151515;
+    }
+
+    .command-chip::before {
+      content: '$ ';
+      color: #4ade80;
+    }
+
+    .command-chip:hover,
+    .command-chip:focus-visible {
+      border-color: #3d3d3d;
+      background: #1a1a1a;
+    }
+
     /* input row */
     .input-row {
       display: flex;
@@ -157,6 +206,35 @@
       font: inherit;
       caret-color: #d4d4d4;
     }
+
+    @media (max-width: 520px) {
+      html, body { font-size: 13px; }
+
+      .terminal {
+        width: calc(100vw - 1rem);
+        height: calc(100vh - 1rem);
+      }
+
+      .titlebar {
+        padding: 0.65rem 0.8rem;
+      }
+
+      .titlebar-label {
+        display: none;
+      }
+
+      .titlebar-links {
+        margin-left: auto;
+      }
+
+      .body {
+        padding: 1rem 1rem 0.25rem;
+      }
+
+      .input-row {
+        padding: 0.5rem 1rem 1rem;
+      }
+    }
   </style>
   <meta name="description" content="Evan Rose">
   <meta name="robots" content="index,follow">
@@ -169,6 +247,11 @@
       <span class="dot y"></span>
       <span class="dot g"></span>
       <span class="titlebar-label">evan@rose — ~</span>
+      <span class="titlebar-links" aria-label="quick commands">
+        <button type="button" data-cmd="about">about</button>
+        <button type="button" data-cmd="work">work</button>
+        <button type="button" data-cmd="contact">contact</button>
+      </span>
     </div>
     <div class="body" id="body">
       <div id="output"></div>
@@ -211,28 +294,101 @@
       out.appendChild(e);
     }
 
+    const suggestions = [
+      ['about', 'who i am'],
+      ['work', 'things i have built and worked on'],
+      ['projects', 'current interests and project directions'],
+      ['why', 'why general purpose robotics'],
+      ['contact', 'get in touch'],
+      ['links', 'around the web']
+    ];
+
+    function commandList(items) {
+      space();
+      print('learn more:');
+      items.forEach(([name, desc]) => {
+        print(`  <span class="c">${name}</span>${' '.repeat(Math.max(1, 10 - name.length))}${desc}`);
+      });
+      space();
+    }
+
+    function chips(items) {
+      const el = document.createElement('div');
+      el.className = 'chips';
+      items.forEach(([name]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'command-chip';
+        b.dataset.cmd = name;
+        b.textContent = name;
+        el.appendChild(b);
+      });
+      out.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
     const cmds = {
       help() {
-        space();
         print('commands:');
-        print('  <span class="c">about</span>    who i am');
-        print('  <span class="c">contact</span>  get in touch');
-        print('  <span class="c">links</span>    around the web');
-        print('  <span class="c">clear</span>    clear terminal');
-        print('  <span class="c">help</span>     this message');
+        suggestions.forEach(([name, desc]) => {
+          print(`  <span class="c">${name}</span>${' '.repeat(Math.max(1, 10 - name.length))}${desc}`);
+        });
+        print('  <span class="c">clear</span>     clear terminal');
+        print('  <span class="c">help</span>      this message');
         space();
       },
       about() {
         space();
-        print("i'm evan rose.");
+        print('<span class="c">who</span>');
+        print("i'm evan rose, a builder interested in systems that make");
+        print('ambitious technology easier to understand, use, and trust.');
         space();
+        print('<span class="c">recently</span>');
         print('i worked on <a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a> this summer.');
+        print('i like careful implementation, deliberate product design,');
+        print('and teams that can turn hard ideas into working artifacts.');
         space();
-        print('humanity now faces the most important project ever:');
-        print('<span style="color:#fb923c">general purpose robotics.</span>');
+        print('<span class="c">direction</span>');
+        print('i think humanity now faces one of its most important projects:');
+        print('<span class="c">general purpose robotics.</span>');
         space();
-        print('i want to help make this a reality — through careful');
-        print('implementation, deliberate design, and worldwide collaboration.');
+        commandList(suggestions.slice(1, 6));
+        chips(suggestions.slice(1, 6));
+      },
+      work() {
+        space();
+        print('<span class="c">work</span>');
+        print('build ai — worked on software for making AI-built apps feel');
+        print('more practical, legible, and useful to real people.');
+        space();
+        print('i care about the craft layer: interfaces, reliability,');
+        print('iteration speed, and the small details that make tools usable.');
+        space();
+        print('try <span class="c">projects</span> for what i want to explore next.');
+        space();
+      },
+      projects() {
+        space();
+        print('<span class="c">projects</span>');
+        print('current directions i want to spend more time on:');
+        print('  - AI tools that help people build and understand software');
+        print('  - robotics interfaces that expose intent, state, and limits');
+        print('  - collaborative systems for turning research into products');
+        space();
+        print('try <span class="c">why</span> for the longer-term motivation.');
+        space();
+      },
+      why() {
+        space();
+        print('<span class="c">why robotics</span>');
+        print('general purpose robotics is where software starts acting');
+        print('directly on the physical world.');
+        space();
+        print('that makes safe deployment and careful implementation');
+        print('as important as raw capability.');
+        space();
+        print('i want to help build systems that are useful, legible,');
+        print('and reliable enough to earn trust in the real world.');
         space();
       },
       contact() {
@@ -249,6 +405,14 @@
       clear() {
         out.innerHTML = '';
       },
+      resume() { cmds.work(); },
+      build() { cmds.work(); },
+      robotics() { cmds.why(); },
+      email() { cmds.contact(); },
+      twitter() { cmds.links(); },
+      x() { cmds.links(); },
+      linkedin() { cmds.links(); },
+      github() { cmds.links(); },
       whoami() { print('evan rose'); },
       date()   { print(new Date().toLocaleString()); },
       echo(args) { if (args.length) print(esc(args.join(' '))); },
@@ -270,7 +434,9 @@
         cmds[cmd](args);
       } else {
         space();
-        print(`command not found: <span class="c">${esc(cmd)}</span> — try <span class="c">help</span>`, 'e');
+        print(`command not found: <span class="c">${esc(cmd)}</span>`, 'e');
+        commandList(suggestions);
+        chips(suggestions);
         space();
       }
     }
@@ -301,7 +467,14 @@
       }
     });
 
-    document.addEventListener('click', () => input.focus());
+    document.addEventListener('click', e => {
+      const target = e.target.closest('[data-cmd]');
+      if (target) {
+        run(target.dataset.cmd);
+        input.value = '';
+      }
+      input.focus();
+    });
 
     /* auto-type intro */
     function typeCmd(cmd, cb) {
