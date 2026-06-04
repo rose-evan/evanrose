@@ -26,6 +26,9 @@
       --yellow: #febc2e;
       --terminal-width: min(700px, calc(100vw - 2rem));
       --terminal-height: min(500px, calc(100vh - 3rem));
+      --terminal-dock-margin: clamp(1rem, 4vw, 3rem);
+      --terminal-dock-width: min(780px, 38vw);
+      --terminal-dock-height: min(920px, calc(100vh - clamp(5rem, 8vw, 6rem)));
     }
 
     html {
@@ -55,6 +58,17 @@
       opacity: 0.36;
       pointer-events: none;
       z-index: 0;
+    }
+
+    .terminal-ripple-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.58;
+      image-rendering: pixelated;
     }
 
     body::after {
@@ -94,7 +108,7 @@
 
     .home {
       width: min(860px, calc(100vw - clamp(4rem, 12vw, 10rem)));
-      max-width: calc(100vw - min(520px, 36vw) - clamp(5rem, 10vw, 10rem));
+      max-width: calc(100vw - var(--terminal-dock-width) - clamp(7rem, 12vw, 12rem));
       opacity: 0;
       transform: translateY(14px);
       transition:
@@ -157,11 +171,68 @@
     .socials {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 1.2rem;
       margin-top: 1.5rem;
       color: #e2e2e2;
       font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
       font-size: 0.95rem;
+    }
+
+    .email-reveal {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .email-trigger {
+      appearance: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-decoration-line: underline;
+      text-decoration-color: currentColor;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    .email-trigger:hover,
+    .email-trigger:focus-visible {
+      color: #ffffff;
+      outline: none;
+    }
+
+    .email-box {
+      position: absolute;
+      top: calc(100% + 0.48rem);
+      left: 0;
+      z-index: 4;
+      width: max-content;
+      max-width: calc(100vw - 2rem);
+      padding: 0.32rem 0.48rem;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 6px;
+      background: rgba(17,17,17,0.96);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.34);
+      color: #eeeeee;
+      font-size: 0.86rem;
+      line-height: 1.3;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px) scale(0.98);
+      transform-origin: top left;
+      transition:
+        opacity 180ms ease,
+        transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .email-box.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
     }
 
     .terminal {
@@ -200,10 +271,10 @@
 
     .terminal.is-docked,
     .is-revealed .terminal {
-      top: clamp(1rem, 4vw, 3rem);
-      left: calc(100vw - clamp(1rem, 4vw, 3rem) - min(430px, 34vw));
-      width: min(430px, 34vw);
-      height: min(320px, calc(100vh - 2rem));
+      top: var(--terminal-dock-margin);
+      left: calc(100vw - var(--terminal-dock-margin) - var(--terminal-dock-width));
+      width: var(--terminal-dock-width);
+      height: var(--terminal-dock-height);
       background: rgba(17, 17, 17, 0.58);
       box-shadow:
         0 0 0 1px rgba(255,255,255,0.02),
@@ -364,55 +435,37 @@
       caret-color: #d4d4d4;
     }
 
-    .is-typing-intro .input-row::after {
-      content: "";
+    .is-typing-intro .input-row {
+      visibility: hidden;
+    }
+
+    .intro-command,
+    .intro-output-line {
+      gap: 0;
+    }
+
+    .intro-command .p {
+      margin-right: 0.5rem;
+    }
+
+    .intro-line-content {
+      width: auto;
+    }
+
+    .terminal-caret {
+      display: inline-block;
       width: 0.7em;
       height: 1.15em;
       background: #d4d4d4;
       opacity: 0.88;
       animation: caretPulse 950ms steps(1) infinite;
+      flex-shrink: 0;
+      transform: translateY(0.18em);
     }
 
-    .intro-writer {
+    .intro-command.is-submitted .terminal-caret,
+    .intro-output-line.is-submitted .terminal-caret {
       display: none;
-      align-items: center;
-      gap: 0.65rem;
-      min-height: 2.25rem;
-      padding: 0.45rem 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.045);
-      color: #d8d8d8;
-      background: rgba(255,255,255,0.018);
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .is-live-writing .intro-writer {
-      display: flex;
-    }
-
-    .intro-writer-label {
-      color: var(--orange);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .intro-writer-text {
-      min-width: 0;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .intro-writer-caret {
-      width: 0.55em;
-      height: 1em;
-      background: #d4d4d4;
-      opacity: 0.88;
-      animation: caretPulse 950ms steps(1) infinite;
-      flex-shrink: 0;
     }
 
     @keyframes caretPulse {
@@ -552,10 +605,6 @@
         padding: 1rem 1rem 0.25rem;
       }
 
-      .intro-writer {
-        padding: 0.42rem 1rem;
-      }
-
       .input-row {
         padding: 0.5rem 1rem 1rem;
       }
@@ -575,14 +624,15 @@
         transition-delay: 0ms !important;
       }
 
-      .intro-writer-caret,
-      .is-typing-intro .input-row::after {
+      .terminal-caret {
         animation: none !important;
       }
     }
   </style>
 </head>
 <body>
+  <canvas class="terminal-ripple-canvas" id="terminal-ripple-canvas" aria-hidden="true"></canvas>
+
   <main class="site" aria-label="Evan Rose homepage">
     <section class="home" aria-labelledby="name">
       <h1 class="identity" id="name">Evan Rose</h1>
@@ -611,7 +661,10 @@
       </ol>
 
       <nav class="socials" aria-label="Links">
-        <a href="mailto:evanrose@ucla.edu">email</a>
+        <span class="email-reveal">
+          <button class="email-trigger" type="button" aria-expanded="false" aria-controls="email-box">email</button>
+          <span class="email-box" id="email-box" role="status">[first name]rose@ucla.edu</span>
+        </span>
         <a href="https://x.com/evanr0se" target="_blank" rel="noopener">x</a>
         <a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin</a>
       </nav>
@@ -637,11 +690,6 @@
       <span class="input-ps1">evan@rose:~$</span>
       <input id="input" type="text" autocomplete="off" spellcheck="false" autofocus>
     </div>
-    <div class="intro-writer" aria-hidden="true">
-      <span class="intro-writer-label">writing</span>
-      <span class="intro-writer-text" id="intro-writer-text"></span>
-      <span class="intro-writer-caret"></span>
-    </div>
     <div class="resize-handle resize-handle-bl" aria-hidden="true"></div>
     <div class="resize-handle resize-handle-b" aria-hidden="true"></div>
   </aside>
@@ -649,27 +697,68 @@
   <script>
   (function () {
     const terminal = document.querySelector('.terminal');
+    const rippleCanvas = document.getElementById('terminal-ripple-canvas');
+    const rippleContext = rippleCanvas && rippleCanvas.getContext ? rippleCanvas.getContext('2d') : null;
     const home = document.querySelector('.home');
+    const emailTrigger = document.querySelector('.email-trigger');
+    const emailBox = document.getElementById('email-box');
     const out = document.getElementById('output');
     const input = document.getElementById('input');
     const body = document.getElementById('body');
-    const introWriterText = document.getElementById('intro-writer-text');
     const resizeHandles = Array.from(document.querySelectorAll('.resize-handle'));
     const PS1 = 'evan@rose:~$';
     const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+    const INTRO_SKIP_STORAGE_KEY = 'evanrose:intro-seen-until';
+    const INTRO_SKIP_DURATION = 5 * 60 * 1000;
     const INTRO_TIMING = {
       startDelay: 950,
       commandKeyMin: 120,
       commandKeyMax: 210,
+      eraseKeyMin: 35,
+      eraseKeyMax: 75,
+      afterGreeting: 460,
+      afterErase: 180,
       afterCommand: 520,
       lineHold: 170,
-      afterOutput: 850,
-      dockDuration: 2200
+      afterOutput: 3000,
+      dockDuration: 4200
     };
+    const DESKTOP_DOCK_WIDTH_MAX = 780;
+    const DESKTOP_DOCK_WIDTH_RATIO = 0.38;
+    const DESKTOP_DOCK_HEIGHT_MAX = 920;
     let revealed = false;
     let dockSizeOverride = null;
     let activeResize = null;
     let resizeFrame = 0;
+    let rippleFrame = 0;
+
+    function readIntroSkipExpiry() {
+      try {
+        return Number(localStorage.getItem(INTRO_SKIP_STORAGE_KEY)) || 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function clearIntroSkipExpiry() {
+      try {
+        localStorage.removeItem(INTRO_SKIP_STORAGE_KEY);
+      } catch {}
+    }
+
+    function shouldSkipStartupIntro() {
+      const expiresAt = readIntroSkipExpiry();
+      if (!expiresAt) return false;
+      if (expiresAt > Date.now()) return true;
+      clearIntroSkipExpiry();
+      return false;
+    }
+
+    function markStartupIntroSeen() {
+      try {
+        localStorage.setItem(INTRO_SKIP_STORAGE_KEY, String(Date.now() + INTRO_SKIP_DURATION));
+      } catch {}
+    }
 
     function revealSite() {
       if (revealed) return;
@@ -677,8 +766,125 @@
       animateReveal();
     }
 
+    function setEmailBoxVisible(isVisible) {
+      if (!emailTrigger || !emailBox) return;
+      emailTrigger.setAttribute('aria-expanded', String(isVisible));
+      emailBox.classList.toggle('is-visible', isVisible);
+    }
+
+    function toggleEmailBox() {
+      if (!emailTrigger) return;
+      setEmailBoxVisible(emailTrigger.getAttribute('aria-expanded') !== 'true');
+    }
+
     function prefersReducedMotion() {
       return motionQuery.matches;
+    }
+
+    function setStartupIntroActive(isActive) {
+      document.body.classList.toggle('is-typing-intro', isActive);
+      input.readOnly = isActive;
+    }
+
+    function resizeRippleCanvas() {
+      if (!rippleContext) return null;
+
+      const width = Math.max(1, Math.ceil(window.innerWidth || document.documentElement.clientWidth || 1));
+      const height = Math.max(1, Math.ceil(window.innerHeight || document.documentElement.clientHeight || 1));
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const scaledWidth = Math.ceil(width * ratio);
+      const scaledHeight = Math.ceil(height * ratio);
+
+      if (rippleCanvas.width !== scaledWidth || rippleCanvas.height !== scaledHeight) {
+        rippleCanvas.width = scaledWidth;
+        rippleCanvas.height = scaledHeight;
+        rippleCanvas.style.width = `${width}px`;
+        rippleCanvas.style.height = `${height}px`;
+      }
+
+      rippleContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { width, height };
+    }
+
+    function distanceFromTerminalEdge(x, y, rect) {
+      const dx = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
+      const dy = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
+      return Math.hypot(dx, dy);
+    }
+
+    function fract(value) {
+      return value - Math.floor(value);
+    }
+
+    function glitchNoise(x, y, tick) {
+      return fract(Math.sin(x * 12.9898 + y * 78.233 + tick * 19.19) * 43758.5453);
+    }
+
+    function drawTerminalRipple(now) {
+      const size = resizeRippleCanvas();
+      if (!size) return;
+
+      const { width, height } = size;
+      const rect = terminal.getBoundingClientRect();
+      const pixel = width <= 560 ? 4 : 5;
+      const reach = Math.min(42, Math.max(24, Math.min(rect.width, rect.height) * 0.105));
+      const tick = prefersReducedMotion() ? 0 : Math.floor(now / 900);
+      const minX = Math.max(0, Math.floor((rect.left - reach) / pixel) * pixel);
+      const maxX = Math.min(width, Math.ceil((rect.right + reach) / pixel) * pixel);
+      const minY = Math.max(0, Math.floor((rect.top - reach) / pixel) * pixel);
+      const maxY = Math.min(height, Math.ceil((rect.bottom + reach) / pixel) * pixel);
+
+      rippleContext.clearRect(0, 0, width, height);
+
+      for (let y = minY; y < maxY; y += pixel) {
+        for (let x = minX; x < maxX; x += pixel) {
+          const cx = x + pixel / 2;
+          const cy = y + pixel / 2;
+          const isInsideTerminal =
+            cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom;
+
+          if (isInsideTerminal) continue;
+
+          const distance = distanceFromTerminalEdge(cx, cy, rect);
+          if (distance > reach) continue;
+
+          const cellX = Math.floor(x / pixel);
+          const cellY = Math.floor(y / pixel);
+          const band = Math.floor(distance / (pixel * 1.55));
+          const brokenEdge = glitchNoise(cellX, cellY, tick);
+          const shimmer = glitchNoise(cellY, cellX, tick + band);
+          const isFineBand = band === 0 || (band === 2 && brokenEdge > 0.56) || (band === 4 && brokenEdge > 0.82);
+
+          if (!isFineBand || shimmer < 0.34) continue;
+
+          const fade = Math.pow(1 - distance / reach, 2.5);
+          const edgeLift = band === 0 ? 0.028 : 0.014;
+          const alpha = fade * (edgeLift + shimmer * 0.034);
+
+          if (alpha < 0.012) continue;
+
+          rippleContext.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          rippleContext.fillRect(x, y, Math.max(1, pixel - 2), Math.max(1, pixel - 2));
+        }
+      }
+    }
+
+    function renderTerminalRipple(now) {
+      drawTerminalRipple(now || 0);
+      if (!prefersReducedMotion()) {
+        rippleFrame = setTimeout(() => {
+          requestAnimationFrame(renderTerminalRipple);
+        }, 260);
+      }
+    }
+
+    function startTerminalRipple() {
+      if (!rippleContext || rippleFrame) return;
+      drawTerminalRipple(0);
+
+      if (!prefersReducedMotion()) {
+        rippleFrame = requestAnimationFrame(renderTerminalRipple);
+      }
     }
 
     function wait(ms) {
@@ -693,8 +899,10 @@
       return Math.min(Math.max(value, min), max);
     }
 
-    function easeOutQuart(t) {
-      return 1 - Math.pow(1 - t, 4);
+    function easeInOutCubic(t) {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
     function getDockMargin() {
@@ -741,12 +949,16 @@
           opacity: 0.58
         };
       } else {
-        const width = Math.min(430, window.innerWidth * 0.34);
+        const width = Math.min(
+          DESKTOP_DOCK_WIDTH_MAX,
+          window.innerWidth * DESKTOP_DOCK_WIDTH_RATIO,
+          constraints.maxWidth
+        );
         target = {
           top: margin,
           left: window.innerWidth - margin - width,
           width,
-          height: Math.min(320, constraints.maxHeight),
+          height: Math.min(DESKTOP_DOCK_HEIGHT_MAX, constraints.maxHeight),
           opacity: 0.52
         };
       }
@@ -767,6 +979,29 @@
       return target;
     }
 
+    function revealSiteImmediately() {
+      if (revealed) return;
+      revealed = true;
+
+      document.body.classList.add('is-revealed');
+      home.classList.add('is-visible');
+      terminal.classList.add('is-docked');
+      body.scrollTop = 0;
+
+      terminal.style.animation = 'none';
+      terminal.style.transition = 'none';
+      terminal.style.transform = 'translate(0, 0) scale(1)';
+      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+
+      home.style.transition = 'none';
+      home.style.opacity = '1';
+      home.style.transform = 'translateY(0)';
+      home.style.pointerEvents = 'auto';
+
+      applyDockRect(getDockTarget());
+      setStartupIntroActive(false);
+    }
+
     function applyDockRect(rect) {
       terminal.style.top = `${rect.top}px`;
       terminal.style.left = `${rect.left}px`;
@@ -774,6 +1009,7 @@
       terminal.style.height = `${rect.height}px`;
       terminal.style.opacity = `${rect.opacity}`;
       updateHomeOffset(rect);
+      drawTerminalRipple(performance.now ? performance.now() : 0);
     }
 
     function updateHomeOffset(rect) {
@@ -817,7 +1053,7 @@
       const startedAt = performance.now();
       function frame(now) {
         const progress = Math.min((now - startedAt) / duration, 1);
-        const eased = easeOutQuart(progress);
+        const eased = easeInOutCubic(progress);
         const revealProgress = Math.max(0, (progress - 0.38) / 0.62);
 
         terminal.style.top = `${start.top + (target.top - start.top) * eased}px`;
@@ -842,6 +1078,7 @@
           terminal.style.background = 'rgba(17, 17, 17, 0.58)';
           home.style.opacity = '1';
           home.style.transform = 'translateY(0)';
+          setStartupIntroActive(false);
         }
       }
 
@@ -882,6 +1119,7 @@
       terminal.style.opacity = '0.96';
       terminal.style.background = 'rgba(17, 17, 17, 0.92)';
       updateHomeOffset({ top: activeResize.startTop, height });
+      drawTerminalRipple(performance.now ? performance.now() : 0);
     }
 
     function startResize(e) {
@@ -976,6 +1214,32 @@
       out.appendChild(e);
     }
 
+    function createIntroTypingLine(prompt) {
+      const el = document.createElement('div');
+      el.className = prompt ? 'line intro-command' : 'line intro-output-line';
+
+      if (prompt) {
+        const promptEl = document.createElement('span');
+        promptEl.className = 'p';
+        promptEl.textContent = prompt;
+        el.appendChild(promptEl);
+      }
+
+      const textEl = document.createElement('span');
+      textEl.className = prompt ? 'c intro-command-text' : 'o intro-line-content';
+      textEl.textContent = '';
+
+      const caretEl = document.createElement('span');
+      caretEl.className = 'terminal-caret';
+
+      el.appendChild(textEl);
+      el.appendChild(caretEl);
+      out.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+
+      return { el, textEl };
+    }
+
     const suggestions = [
       ['about', 'who i am'],
       ['writing', 'essays and notes'],
@@ -1024,7 +1288,7 @@
 
     function commandList(items) {
       space();
-      print('learn more:');
+      print('type the following commands in the terminal to learn more about me!');
       items.forEach(([name, desc]) => {
         print(`  <span class="c">${name}</span>${' '.repeat(Math.max(1, 10 - name.length))}${desc}`);
       });
@@ -1123,7 +1387,7 @@
       },
       contact() {
         space();
-        print('<a href="mailto:evanrose@ucla.edu">evanrose@ucla.edu</a>');
+        print('[first name]rose@ucla.edu');
         space();
       },
       links() {
@@ -1209,6 +1473,7 @@
     window.addEventListener('pointerup', endResize);
     window.addEventListener('pointercancel', endResize);
     window.addEventListener('resize', scheduleDockReapply);
+    window.addEventListener('resize', () => { drawTerminalRipple(0); });
 
     document.addEventListener('click', e => {
       const target = e.target.closest('[data-cmd]');
@@ -1223,19 +1488,54 @@
       }
     });
 
-    async function typeStartupCommand(cmd) {
+    if (emailTrigger) {
+      emailTrigger.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleEmailBox();
+      });
+    }
+
+    document.addEventListener('click', e => {
+      if (!emailBox || !emailTrigger) return;
+      if (emailBox.contains(e.target) || emailTrigger.contains(e.target)) return;
+      setEmailBoxVisible(false);
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        setEmailBoxVisible(false);
+      }
+    });
+
+    async function typeIntroText(textEl, text, minDelay, maxDelay) {
+      for (let i = 0; i < text.length; i += 1) {
+        textEl.textContent += text[i];
+        body.scrollTop = body.scrollHeight;
+        await wait(randomBetween(minDelay, maxDelay));
+      }
+    }
+
+    async function eraseIntroText(textEl) {
+      while (textEl.textContent.length > 0) {
+        textEl.textContent = textEl.textContent.slice(0, -1);
+        body.scrollTop = body.scrollHeight;
+        await wait(randomBetween(INTRO_TIMING.eraseKeyMin, INTRO_TIMING.eraseKeyMax));
+      }
+    }
+
+    async function typeStartupCommand(greeting, cmd) {
       input.value = '';
-      document.body.classList.add('is-typing-intro');
+      const { el, textEl } = createIntroTypingLine(PS1);
       await wait(180);
 
-      for (let i = 0; i < cmd.length; i += 1) {
-        input.value += cmd[i];
-        await wait(randomBetween(INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax));
-      }
+      await typeIntroText(textEl, greeting, INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax);
+      await wait(INTRO_TIMING.afterGreeting);
+      await eraseIntroText(textEl);
+      await wait(INTRO_TIMING.afterErase);
+      await typeIntroText(textEl, cmd, INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax);
 
-      document.body.classList.remove('is-typing-intro');
       await wait(INTRO_TIMING.afterCommand);
-      line(PS1, cmd);
+      el.classList.add('is-submitted');
       input.value = '';
     }
 
@@ -1243,54 +1543,58 @@
       return clamp(950 / Math.max(text.length, 1), 16, 46);
     }
 
-    async function writeIntroLine(text) {
-      introWriterText.textContent = '';
-      document.body.classList.add('is-live-writing');
-
-      for (let i = 0; i < text.length; i += 1) {
-        introWriterText.textContent += text[i];
-        await wait(introWriteDelay(text));
-      }
+    async function writeIntroLine(step) {
+      const { el, textEl } = createIntroTypingLine();
+      const delay = introWriteDelay(step.text);
+      await typeIntroText(textEl, step.text, delay, delay);
+      textEl.innerHTML = step.html;
+      el.classList.add('is-submitted');
     }
 
     async function printCinematicAbout() {
       for (const step of introAboutSteps) {
         if (step.kind === 'space') {
-          document.body.classList.remove('is-live-writing');
-          introWriterText.textContent = '';
           space();
           await wait(140);
           continue;
         }
 
-        await writeIntroLine(step.text);
+        await writeIntroLine(step);
         await wait(120);
-        print(step.html);
-        introWriterText.textContent = '';
         await wait(INTRO_TIMING.lineHold);
       }
-
-      document.body.classList.remove('is-live-writing');
     }
 
     async function playStartupIntro() {
-      input.readOnly = true;
+      setStartupIntroActive(true);
 
       if (prefersReducedMotion()) {
         run('about');
-        input.readOnly = false;
         revealSite();
         return;
       }
 
-      await typeStartupCommand('about');
+      await typeStartupCommand('oh hey', 'about');
       await printCinematicAbout();
-      input.readOnly = false;
       await wait(INTRO_TIMING.afterOutput);
       revealSite();
     }
 
-    setTimeout(() => { playStartupIntro(); }, prefersReducedMotion() ? 0 : INTRO_TIMING.startDelay);
+    function startHomepage() {
+      if (shouldSkipStartupIntro()) {
+        run('about');
+        revealSiteImmediately();
+        input.focus();
+        return;
+      }
+
+      markStartupIntroSeen();
+      setStartupIntroActive(true);
+      setTimeout(() => { playStartupIntro(); }, prefersReducedMotion() ? 0 : INTRO_TIMING.startDelay);
+    }
+
+    startTerminalRipple();
+    startHomepage();
   })();
   </script>
 </body>
