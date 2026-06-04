@@ -4,98 +4,255 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Evan Rose</title>
+  <meta name="description" content="Evan Rose writes about building, AI tools, robotics, and careful software.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="data:,">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
 
-    html, body {
-      height: 100%;
-      background: #0a0a0a;
-      color: #d4d4d4;
-      font-family: 'JetBrains Mono', 'SF Mono', monospace;
-      font-size: 14px;
-      line-height: 1.65;
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --bg-soft: #0d0d0d;
+      --fg: #eeeeee;
+      --muted: #9a9a9a;
+      --quiet: #5e5e5e;
+      --line: #242424;
+      --green: #4ade80;
+      --orange: #fb923c;
+      --red: #ff5f57;
+      --yellow: #febc2e;
+      --terminal-width: min(700px, calc(100vw - 2rem));
+      --terminal-height: min(500px, calc(100vh - 3rem));
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
     }
 
     body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 78% 12%, rgba(255,255,255,0.045), transparent 25rem),
+        var(--bg);
+      overflow-x: hidden;
     }
 
-    /* dot-grid background */
     body::before {
-      content: '';
+      content: "";
       position: fixed;
       inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.033) 1px, transparent 1px);
-      background-size: 28px 28px;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.36;
       pointer-events: none;
       z-index: 0;
     }
 
-    /* scanlines */
     body::after {
-      content: '';
+      content: "";
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         0deg,
         transparent,
         transparent 2px,
-        rgba(0,0,0,0.055) 2px,
-        rgba(0,0,0,0.055) 4px
+        rgba(0,0,0,0.09) 2px,
+        rgba(0,0,0,0.09) 4px
       );
       pointer-events: none;
-      z-index: 0;
+      z-index: 3;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: currentColor;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: #ffffff;
+      outline: none;
+    }
+
+    .site {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: clamp(2rem, 6vw, 5rem);
+    }
+
+    .home {
+      width: min(860px, calc(100vw - clamp(4rem, 12vw, 10rem)));
+      max-width: calc(100vw - min(520px, 36vw) - clamp(5rem, 10vw, 10rem));
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        opacity 900ms ease 760ms,
+        transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 760ms;
+      pointer-events: none;
+    }
+
+    .home.is-visible,
+    .is-revealed .home {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .identity {
+      margin: 0 0 2rem;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .intro-copy {
+      max-width: 48rem;
+      margin: 0 0 2.4rem;
+      color: #d6d6d6;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+    }
+
+    .writing-list {
+      display: grid;
+      gap: 0.55rem;
+      margin: 0 0 1.9rem;
+      padding: 0;
+      list-style: none;
+      font-size: clamp(1.1rem, 2vw, 1.55rem);
+    }
+
+    .writing-list li {
+      display: grid;
+      grid-template-columns: 5rem minmax(0, max-content);
+      align-items: baseline;
+      column-gap: 0.7rem;
+    }
+
+    .writing-list time {
+      color: #dcdcdc;
+      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+      font-size: 0.9em;
+      white-space: nowrap;
+    }
+
+    .writing-list a {
+      width: fit-content;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+      color: #e2e2e2;
+      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+      font-size: 0.95rem;
     }
 
     .terminal {
-      position: relative;
-      z-index: 1;
-      width: min(700px, calc(100vw - 2rem));
-      height: min(500px, calc(100vh - 3rem));
+      position: fixed;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      width: var(--terminal-width);
+      height: var(--terminal-height);
       display: flex;
       flex-direction: column;
       background: #111111;
-      border: 1px solid #1e1e1e;
+      border: 1px solid #1f1f1f;
       border-radius: 10px;
       overflow: hidden;
       box-shadow:
-        0 0 0 1px rgba(255,255,255,0.03),
-        0 40px 80px rgba(0,0,0,0.7),
-        0 16px 32px rgba(0,0,0,0.4);
-      animation: appear 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        0 0 0 1px rgba(255,255,255,0.035),
+        0 44px 90px rgba(0,0,0,0.78),
+        0 16px 34px rgba(0,0,0,0.45);
+      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+      font-size: 14px;
+      line-height: 1.65;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      transition:
+        top 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+        left 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+        width 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+        height 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 1200ms ease,
+        transform 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 1200ms ease,
+        background 1200ms ease;
+      animation: appear 550ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .terminal.is-docked,
+    .is-revealed .terminal {
+      top: clamp(1rem, 4vw, 3rem);
+      left: calc(100vw - clamp(1rem, 4vw, 3rem) - min(430px, 34vw));
+      width: min(430px, 34vw);
+      height: min(320px, calc(100vh - 2rem));
+      background: rgba(17, 17, 17, 0.58);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02),
+        0 20px 58px rgba(0,0,0,0.52);
+      opacity: 0.52;
+      transform: translate(0, 0) scale(1);
+      backdrop-filter: blur(6px);
+      animation: none;
+    }
+
+    .terminal.is-docked:hover,
+    .terminal.is-docked:focus-within,
+    .terminal.is-resizing,
+    .is-revealed .terminal:hover,
+    .is-revealed .terminal:focus-within {
+      opacity: 0.96;
+      background: rgba(17, 17, 17, 0.92);
+    }
+
+    .terminal.is-resizing {
+      user-select: none;
+      transition: none;
     }
 
     @keyframes appear {
-      from { opacity: 0; transform: translateY(18px) scale(0.985); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translate(-50%, calc(-50% + 18px)) scale(0.985); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
-    /* titlebar */
     .titlebar {
       display: flex;
       align-items: center;
+      gap: 6px;
       padding: 0.7rem 1rem;
       background: #161616;
-      border-bottom: 1px solid #1e1e1e;
+      border-bottom: 1px solid #202020;
       flex-shrink: 0;
-      gap: 6px;
     }
 
     .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot.r { background: #ff5f57; }
-    .dot.y { background: #febc2e; }
+    .dot.r { background: var(--red); }
+    .dot.y { background: var(--yellow); }
     .dot.g { background: #28c840; }
 
     .titlebar-label {
       flex: 1;
       text-align: center;
+      color: #4d4d4d;
       font-size: 12px;
-      color: #3d3d3d;
       letter-spacing: 0.04em;
     }
 
@@ -107,9 +264,10 @@
 
     .titlebar-links button,
     .command-chip {
-      color: #737373;
+      color: #8c8c8c;
       background: none;
       border: none;
+      border-radius: 0;
       font: inherit;
       cursor: pointer;
     }
@@ -118,47 +276,46 @@
     .titlebar-links button:focus-visible,
     .command-chip:hover,
     .command-chip:focus-visible {
-      color: #d4d4d4;
+      color: #f0f0f0;
       outline: none;
     }
 
-    /* scroll area */
     .body {
       flex: 1;
       overflow-y: auto;
       padding: 1.25rem 1.5rem 0.25rem;
       scrollbar-width: thin;
-      scrollbar-color: #222 transparent;
+      scrollbar-color: #2a2a2a transparent;
     }
 
     .body::-webkit-scrollbar { width: 3px; }
     .body::-webkit-scrollbar-track { background: transparent; }
-    .body::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+    .body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
-    /* output lines */
     .line {
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
       gap: 0 0.5rem;
       min-height: 1.65em;
-      animation: fadeIn 0.2s ease both;
+      animation: fadeIn 200ms ease both;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; }
-      to   { opacity: 1; }
+      to { opacity: 1; }
     }
 
     .spacer { height: 0.6rem; }
 
-    .p   { color: #4ade80; flex-shrink: 0; user-select: none; }
-    .c   { color: #fb923c; }
-    .o   { color: #d4d4d4; width: 100%; }
-    .e   { color: #f87171; width: 100%; }
+    .p { color: var(--green); flex-shrink: 0; user-select: none; }
+    .c { color: var(--orange); }
+    .o { color: #d4d4d4; width: 100%; }
+    .e { color: #f87171; width: 100%; }
 
-    .o a { color: #60a5fa; text-decoration: none; }
-    .o a:hover { text-decoration: underline; }
+    .o a { color: #93c5fd; text-decoration: none; }
+    .o a:hover,
+    .o a:focus-visible { text-decoration: underline; }
 
     .chips {
       display: flex;
@@ -176,8 +333,8 @@
     }
 
     .command-chip::before {
-      content: '$ ';
-      color: #4ade80;
+      content: "$ ";
+      color: var(--green);
     }
 
     .command-chip:hover,
@@ -186,7 +343,6 @@
       background: #1a1a1a;
     }
 
-    /* input row */
     .input-row {
       display: flex;
       align-items: center;
@@ -195,9 +351,10 @@
       flex-shrink: 0;
     }
 
-    .input-ps1 { color: #4ade80; user-select: none; flex-shrink: 0; }
+    .input-ps1 { color: var(--green); user-select: none; flex-shrink: 0; }
 
     .input-row input {
+      min-width: 0;
       flex: 1;
       background: none;
       border: none;
@@ -207,12 +364,176 @@
       caret-color: #d4d4d4;
     }
 
-    @media (max-width: 520px) {
-      html, body { font-size: 13px; }
+    .is-typing-intro .input-row::after {
+      content: "";
+      width: 0.7em;
+      height: 1.15em;
+      background: #d4d4d4;
+      opacity: 0.88;
+      animation: caretPulse 950ms steps(1) infinite;
+    }
+
+    .intro-writer {
+      display: none;
+      align-items: center;
+      gap: 0.65rem;
+      min-height: 2.25rem;
+      padding: 0.45rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.045);
+      color: #d8d8d8;
+      background: rgba(255,255,255,0.018);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .is-live-writing .intro-writer {
+      display: flex;
+    }
+
+    .intro-writer-label {
+      color: var(--orange);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .intro-writer-text {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .intro-writer-caret {
+      width: 0.55em;
+      height: 1em;
+      background: #d4d4d4;
+      opacity: 0.88;
+      animation: caretPulse 950ms steps(1) infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes caretPulse {
+      50% { opacity: 0.25; }
+    }
+
+    .resize-handle {
+      position: absolute;
+      z-index: 4;
+      display: none;
+      touch-action: none;
+    }
+
+    .terminal.is-docked .resize-handle {
+      display: block;
+    }
+
+    .resize-handle-bl {
+      left: 0;
+      bottom: 0;
+      width: 22px;
+      height: 22px;
+      cursor: nesw-resize;
+    }
+
+    .resize-handle-bl::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: 6px;
+      width: 10px;
+      height: 10px;
+      border-left: 1px solid rgba(255,255,255,0.42);
+      border-bottom: 1px solid rgba(255,255,255,0.42);
+    }
+
+    .resize-handle-b {
+      left: 22px;
+      right: 22px;
+      bottom: 0;
+      height: 16px;
+      cursor: ns-resize;
+    }
+
+    .resize-handle-b::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 6px;
+      width: 32px;
+      height: 1px;
+      background: rgba(255,255,255,0.34);
+      transform: translateX(-50%);
+    }
+
+    @media (max-width: 980px) {
+      .site {
+        padding: 1.6rem;
+      }
+
+      .home {
+        width: min(720px, 100%);
+        max-width: none;
+        padding-top: min(360px, 46vh);
+      }
+
+      .terminal.is-docked,
+      .is-revealed .terminal {
+        top: 0.8rem;
+        left: 0.8rem;
+        width: calc(100vw - 1.6rem);
+        height: min(310px, 42vh);
+      }
+
+      .resize-handle-bl {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 560px) {
+      html { font-size: 15px; }
+
+      .site {
+        padding: 1rem;
+      }
+
+      .home {
+        padding-top: min(330px, 45vh);
+      }
+
+      .identity {
+        font-size: 2.6rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .intro-copy {
+        margin-bottom: 1.6rem;
+      }
+
+      .writing-list {
+        gap: 0.75rem;
+        font-size: 1.15rem;
+      }
+
+      .writing-list li {
+        grid-template-columns: 4.2rem minmax(0, 1fr);
+      }
 
       .terminal {
         width: calc(100vw - 1rem);
-        height: calc(100vh - 1rem);
+        height: min(500px, calc(100vh - 2rem));
+        font-size: 13px;
+      }
+
+      .terminal.is-docked,
+      .is-revealed .terminal {
+        top: 0.5rem;
+        left: 0.5rem;
+        width: calc(100vw - 1rem);
+        height: min(290px, 42vh);
+        opacity: 0.68;
       }
 
       .titlebar {
@@ -231,25 +552,81 @@
         padding: 1rem 1rem 0.25rem;
       }
 
+      .intro-writer {
+        padding: 0.42rem 1rem;
+      }
+
       .input-row {
         padding: 0.5rem 1rem 1rem;
       }
+
+      .resize-handle-bl {
+        display: none !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .intro-writer-caret,
+      .is-typing-intro .input-row::after {
+        animation: none !important;
+      }
     }
   </style>
-  <meta name="description" content="Evan Rose">
-  <meta name="robots" content="index,follow">
-  <link rel="icon" href="data:,">
 </head>
 <body>
-  <div class="terminal">
+  <main class="site" aria-label="Evan Rose homepage">
+    <section class="home" aria-labelledby="name">
+      <h1 class="identity" id="name">Evan Rose</h1>
+      <p class="intro-copy">
+        I build software, think about general purpose robotics, and write notes on tools,
+        incentives, interfaces, and the craft of making ambitious technology legible.
+      </p>
+
+      <ol class="writing-list" aria-label="Writing">
+        <li>
+          <time datetime="2026-06">06/26</time>
+          <a href="writing/incentives-and-trust.html">Incentives and Trust</a>
+        </li>
+        <li>
+          <time datetime="2026-06">06/26</time>
+          <a href="writing/general-purpose-robotics.html">General Purpose Robotics</a>
+        </li>
+        <li>
+          <time datetime="2026-06">06/26</time>
+          <a href="writing/legible-ai-tools.html">Legible AI Tools</a>
+        </li>
+        <li>
+          <time datetime="2026-06">06/26</time>
+          <a href="writing/craft-layer.html">The Craft Layer</a>
+        </li>
+      </ol>
+
+      <nav class="socials" aria-label="Links">
+        <a href="mailto:evanrose@ucla.edu">email</a>
+        <a href="https://x.com/evanr0se" target="_blank" rel="noopener">x</a>
+        <a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin</a>
+      </nav>
+    </section>
+  </main>
+
+  <aside class="terminal" aria-label="interactive terminal">
     <div class="titlebar">
       <span class="dot r"></span>
       <span class="dot y"></span>
       <span class="dot g"></span>
-      <span class="titlebar-label">evan@rose — ~</span>
+      <span class="titlebar-label">evan@rose - ~</span>
       <span class="titlebar-links" aria-label="quick commands">
         <button type="button" data-cmd="about">about</button>
-        <button type="button" data-cmd="work">work</button>
+        <button type="button" data-cmd="writing">writing</button>
         <button type="button" data-cmd="contact">contact</button>
       </span>
     </div>
@@ -260,14 +637,319 @@
       <span class="input-ps1">evan@rose:~$</span>
       <input id="input" type="text" autocomplete="off" spellcheck="false" autofocus>
     </div>
-  </div>
+    <div class="intro-writer" aria-hidden="true">
+      <span class="intro-writer-label">writing</span>
+      <span class="intro-writer-text" id="intro-writer-text"></span>
+      <span class="intro-writer-caret"></span>
+    </div>
+    <div class="resize-handle resize-handle-bl" aria-hidden="true"></div>
+    <div class="resize-handle resize-handle-b" aria-hidden="true"></div>
+  </aside>
 
   <script>
   (function () {
-    const out   = document.getElementById('output');
+    const terminal = document.querySelector('.terminal');
+    const home = document.querySelector('.home');
+    const out = document.getElementById('output');
     const input = document.getElementById('input');
-    const body  = document.getElementById('body');
-    const PS1   = 'evan@rose:~$';
+    const body = document.getElementById('body');
+    const introWriterText = document.getElementById('intro-writer-text');
+    const resizeHandles = Array.from(document.querySelectorAll('.resize-handle'));
+    const PS1 = 'evan@rose:~$';
+    const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+    const INTRO_TIMING = {
+      startDelay: 950,
+      commandKeyMin: 120,
+      commandKeyMax: 210,
+      afterCommand: 520,
+      lineHold: 170,
+      afterOutput: 850,
+      dockDuration: 2200
+    };
+    let revealed = false;
+    let dockSizeOverride = null;
+    let activeResize = null;
+    let resizeFrame = 0;
+
+    function revealSite() {
+      if (revealed) return;
+      revealed = true;
+      animateReveal();
+    }
+
+    function prefersReducedMotion() {
+      return motionQuery.matches;
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, prefersReducedMotion() ? 0 : ms));
+    }
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function easeOutQuart(t) {
+      return 1 - Math.pow(1 - t, 4);
+    }
+
+    function getDockMargin() {
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      if (matchMedia('(max-width: 560px)').matches) return 0.5 * rem;
+      if (matchMedia('(max-width: 980px)').matches) return 0.8 * rem;
+      return Math.min(Math.max(window.innerWidth * 0.04, rem), 3 * rem);
+    }
+
+    function getDockConstraints() {
+      const margin = getDockMargin();
+      const maxWidth = Math.max(220, window.innerWidth - margin * 2);
+      const maxHeight = Math.max(180, window.innerHeight - margin * 2);
+      return {
+        margin,
+        maxWidth,
+        maxHeight,
+        minWidth: Math.min(300, maxWidth),
+        minHeight: Math.min(180, maxHeight),
+        isNarrow: matchMedia('(max-width: 560px)').matches,
+        isTablet: matchMedia('(max-width: 980px)').matches
+      };
+    }
+
+    function getDockTarget() {
+      const constraints = getDockConstraints();
+      const { margin, isNarrow, isTablet } = constraints;
+      let target;
+
+      if (isNarrow) {
+        target = {
+          top: margin,
+          left: margin,
+          width: window.innerWidth - margin * 2,
+          height: Math.min(290, window.innerHeight * 0.42),
+          opacity: 0.68
+        };
+      } else if (isTablet) {
+        target = {
+          top: margin,
+          left: margin,
+          width: window.innerWidth - margin * 2,
+          height: Math.min(310, window.innerHeight * 0.42),
+          opacity: 0.58
+        };
+      } else {
+        const width = Math.min(430, window.innerWidth * 0.34);
+        target = {
+          top: margin,
+          left: window.innerWidth - margin - width,
+          width,
+          height: Math.min(320, constraints.maxHeight),
+          opacity: 0.52
+        };
+      }
+
+      if (dockSizeOverride && revealed) {
+        target.height = clamp(dockSizeOverride.height || target.height, constraints.minHeight, constraints.maxHeight);
+
+        if (isTablet || isNarrow) {
+          target.left = margin;
+          target.width = window.innerWidth - margin * 2;
+        } else {
+          const right = window.innerWidth - margin;
+          target.width = clamp(dockSizeOverride.width || target.width, constraints.minWidth, constraints.maxWidth);
+          target.left = right - target.width;
+        }
+      }
+
+      return target;
+    }
+
+    function applyDockRect(rect) {
+      terminal.style.top = `${rect.top}px`;
+      terminal.style.left = `${rect.left}px`;
+      terminal.style.width = `${rect.width}px`;
+      terminal.style.height = `${rect.height}px`;
+      terminal.style.opacity = `${rect.opacity}`;
+      updateHomeOffset(rect);
+    }
+
+    function updateHomeOffset(rect) {
+      const constraints = getDockConstraints();
+      if (!revealed || (!constraints.isTablet && !constraints.isNarrow)) {
+        home.style.paddingTop = '';
+        return;
+      }
+
+      const baseOffset = constraints.isNarrow
+        ? Math.min(330, window.innerHeight * 0.45)
+        : Math.min(360, window.innerHeight * 0.46);
+      const terminalOffset = rect.top + rect.height + 28;
+      home.style.paddingTop = `${Math.max(baseOffset, terminalOffset)}px`;
+    }
+
+    function animateReveal() {
+      const start = terminal.getBoundingClientRect();
+      const target = getDockTarget();
+      const duration = prefersReducedMotion() ? 1 : INTRO_TIMING.dockDuration;
+
+      document.body.classList.add('is-revealed');
+      home.classList.add('is-visible');
+      terminal.classList.add('is-docked');
+      body.scrollTop = 0;
+
+      terminal.style.animation = 'none';
+      terminal.style.transition = 'none';
+      terminal.style.top = `${start.top}px`;
+      terminal.style.left = `${start.left}px`;
+      terminal.style.width = `${start.width}px`;
+      terminal.style.height = `${start.height}px`;
+      terminal.style.transform = 'translate(0, 0) scale(1)';
+      terminal.style.opacity = '1';
+
+      home.style.transition = 'none';
+      home.style.opacity = '0';
+      home.style.transform = 'translateY(14px)';
+      home.style.pointerEvents = 'auto';
+
+      const startedAt = performance.now();
+      function frame(now) {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = easeOutQuart(progress);
+        const revealProgress = Math.max(0, (progress - 0.38) / 0.62);
+
+        terminal.style.top = `${start.top + (target.top - start.top) * eased}px`;
+        terminal.style.left = `${start.left + (target.left - start.left) * eased}px`;
+        terminal.style.width = `${start.width + (target.width - start.width) * eased}px`;
+        terminal.style.height = `${start.height + (target.height - start.height) * eased}px`;
+        terminal.style.opacity = `${1 + (target.opacity - 1) * eased}`;
+        terminal.style.background = `rgba(17, 17, 17, ${0.94 + (0.58 - 0.94) * eased})`;
+        terminal.style.boxShadow = `0 0 0 1px rgba(255,255,255,0.02), 0 ${44 + (20 - 44) * eased}px ${90 + (58 - 90) * eased}px rgba(0,0,0,${0.78 + (0.52 - 0.78) * eased})`;
+        updateHomeOffset({
+          top: start.top + (target.top - start.top) * eased,
+          height: start.height + (target.height - start.height) * eased
+        });
+
+        home.style.opacity = `${revealProgress}`;
+        home.style.transform = `translateY(${14 * (1 - revealProgress)}px)`;
+
+        if (progress < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          applyDockRect(target);
+          terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+          home.style.opacity = '1';
+          home.style.transform = 'translateY(0)';
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    function setDockSize(width, height) {
+      const constraints = getDockConstraints();
+      dockSizeOverride = {
+        width: clamp(width, constraints.minWidth, constraints.maxWidth),
+        height: clamp(height, constraints.minHeight, constraints.maxHeight)
+      };
+      const target = getDockTarget();
+      applyDockRect(target);
+      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+    }
+
+    function resizeDockedTerminal(clientX, clientY) {
+      if (!activeResize) return;
+
+      const constraints = getDockConstraints();
+      const dx = clientX - activeResize.startX;
+      const dy = clientY - activeResize.startY;
+      let width = activeResize.startWidth;
+      let height = clamp(activeResize.startHeight + dy, constraints.minHeight, constraints.maxHeight);
+      let left = activeResize.startLeft;
+
+      if (activeResize.edge === 'bl' && !constraints.isTablet && !constraints.isNarrow) {
+        width = clamp(activeResize.startWidth - dx, constraints.minWidth, constraints.maxWidth);
+        left = activeResize.startRight - width;
+      }
+
+      dockSizeOverride = { width, height };
+      terminal.style.top = `${activeResize.startTop}px`;
+      terminal.style.left = `${left}px`;
+      terminal.style.width = `${width}px`;
+      terminal.style.height = `${height}px`;
+      terminal.style.opacity = '0.96';
+      terminal.style.background = 'rgba(17, 17, 17, 0.92)';
+      updateHomeOffset({ top: activeResize.startTop, height });
+    }
+
+    function startResize(e) {
+      if (!revealed || !terminal.classList.contains('is-docked')) return;
+
+      const rect = terminal.getBoundingClientRect();
+      activeResize = {
+        edge: e.currentTarget.classList.contains('resize-handle-bl') ? 'bl' : 'b',
+        startX: e.clientX,
+        startY: e.clientY,
+        startTop: rect.top,
+        startLeft: rect.left,
+        startRight: rect.right,
+        startWidth: rect.width,
+        startHeight: rect.height
+      };
+
+      terminal.classList.add('is-resizing');
+      terminal.style.opacity = '0.96';
+      terminal.style.background = 'rgba(17, 17, 17, 0.92)';
+      if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+
+    function moveResize(e) {
+      if (!activeResize) return;
+      resizeDockedTerminal(e.clientX, e.clientY);
+    }
+
+    function endResize() {
+      if (!activeResize) return;
+      activeResize = null;
+      terminal.classList.remove('is-resizing');
+      const target = getDockTarget();
+      applyDockRect(target);
+      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+      input.focus();
+    }
+
+    function resizeWithKeyboard(key, shiftKey) {
+      if (!revealed || !terminal.classList.contains('is-docked')) return false;
+
+      const constraints = getDockConstraints();
+      const rect = terminal.getBoundingClientRect();
+      const step = shiftKey ? 48 : 24;
+      let width = rect.width;
+      let height = rect.height;
+
+      if (key === 'ArrowUp') height -= step;
+      if (key === 'ArrowDown') height += step;
+      if (!constraints.isTablet && !constraints.isNarrow) {
+        if (key === 'ArrowLeft') width += step;
+        if (key === 'ArrowRight') width -= step;
+      }
+
+      setDockSize(width, height);
+      return true;
+    }
+
+    function scheduleDockReapply() {
+      if (!revealed || !terminal.classList.contains('is-docked')) return;
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        const target = getDockTarget();
+        applyDockRect(target);
+        terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+      });
+    }
 
     function esc(s) {
       const d = document.createElement('div');
@@ -279,8 +961,8 @@
       const el = document.createElement('div');
       el.className = 'line';
       let h = '';
-      if (prompt)  h += `<span class="p">${esc(prompt)}</span>`;
-      if (cmd)     h += `<span class="c">${esc(cmd)}</span>`;
+      if (prompt) h += `<span class="p">${esc(prompt)}</span>`;
+      if (cmd) h += `<span class="c">${esc(cmd)}</span>`;
       if (content) h += `<span class="${cls || 'o'}">${content}</span>`;
       el.innerHTML = h;
       out.appendChild(el);
@@ -296,11 +978,48 @@
 
     const suggestions = [
       ['about', 'who i am'],
+      ['writing', 'essays and notes'],
       ['work', 'things i have built and worked on'],
       ['projects', 'current interests and project directions'],
       ['why', 'why general purpose robotics'],
       ['contact', 'get in touch'],
       ['links', 'around the web']
+    ];
+
+    const articles = [
+      ['06/26', 'Incentives and Trust', 'writing/incentives-and-trust.html'],
+      ['06/26', 'General Purpose Robotics', 'writing/general-purpose-robotics.html'],
+      ['06/26', 'Legible AI Tools', 'writing/legible-ai-tools.html'],
+      ['06/26', 'The Craft Layer', 'writing/craft-layer.html']
+    ];
+
+    const introAboutSteps = [
+      { kind: 'space' },
+      { text: 'who', html: '<span class="c">who</span>' },
+      {
+        text: "i'm evan rose, a builder interested in systems that make",
+        html: "i'm evan rose, a builder interested in systems that make"
+      },
+      {
+        text: 'ambitious technology easier to understand, use, and trust.',
+        html: 'ambitious technology easier to understand, use, and trust.'
+      },
+      { kind: 'space' },
+      { text: 'recently', html: '<span class="c">recently</span>' },
+      {
+        text: 'i worked on build ai this summer.',
+        html: 'i worked on <a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a> this summer.'
+      },
+      { kind: 'space' },
+      { text: 'direction', html: '<span class="c">direction</span>' },
+      {
+        text: 'i think humanity now faces one of its most important projects:',
+        html: 'i think humanity now faces one of its most important projects:'
+      },
+      {
+        text: 'general purpose robotics.',
+        html: '<span class="c">general purpose robotics.</span>'
+      }
     ];
 
     function commandList(items) {
@@ -327,6 +1046,15 @@
       body.scrollTop = body.scrollHeight;
     }
 
+    function printArticles() {
+      space();
+      print('<span class="c">writing</span>');
+      articles.forEach(([date, title, href]) => {
+        print(`${date}  <a href="${href}">${title}</a>`);
+      });
+      space();
+    }
+
     const cmds = {
       help() {
         print('commands:');
@@ -351,20 +1079,22 @@
         print('<span class="c">direction</span>');
         print('i think humanity now faces one of its most important projects:');
         print('<span class="c">general purpose robotics.</span>');
-        space();
-        commandList(suggestions.slice(1, 6));
-        chips(suggestions.slice(1, 6));
+        commandList(suggestions.slice(1, 7));
+        chips(suggestions.slice(1, 7));
       },
+      writing() { printArticles(); },
+      articles() { printArticles(); },
+      notes() { printArticles(); },
       work() {
         space();
         print('<span class="c">work</span>');
-        print('build ai — worked on software for making AI-built apps feel');
+        print('build ai - worked on software for making AI-built apps feel');
         print('more practical, legible, and useful to real people.');
         space();
         print('i care about the craft layer: interfaces, reliability,');
         print('iteration speed, and the small details that make tools usable.');
         space();
-        print('try <span class="c">projects</span> for what i want to explore next.');
+        print('try <span class="c">writing</span> for longer notes.');
         space();
       },
       projects() {
@@ -412,9 +1142,8 @@
       twitter() { cmds.links(); },
       x() { cmds.links(); },
       linkedin() { cmds.links(); },
-      github() { cmds.links(); },
       whoami() { print('evan rose'); },
-      date()   { print(new Date().toLocaleString()); },
+      date() { print(new Date().toLocaleString()); },
       echo(args) { if (args.length) print(esc(args.join(' '))); },
       sudo() {
         space();
@@ -441,11 +1170,17 @@
       }
     }
 
-    /* history */
     const hist = [];
     let hi = -1;
 
     input.addEventListener('keydown', e => {
+      if (e.altKey && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        if (resizeWithKeyboard(e.key, e.shiftKey)) {
+          e.preventDefault();
+          return;
+        }
+      }
+
       if (e.key === 'Enter') {
         const v = input.value;
         input.value = '';
@@ -467,29 +1202,95 @@
       }
     });
 
+    resizeHandles.forEach(handle => {
+      handle.addEventListener('pointerdown', startResize);
+    });
+    window.addEventListener('pointermove', moveResize);
+    window.addEventListener('pointerup', endResize);
+    window.addEventListener('pointercancel', endResize);
+    window.addEventListener('resize', scheduleDockReapply);
+
     document.addEventListener('click', e => {
       const target = e.target.closest('[data-cmd]');
       if (target) {
         run(target.dataset.cmd);
         input.value = '';
+        input.focus();
+        return;
       }
-      input.focus();
+      if (terminal.contains(e.target) && !e.target.closest('a')) {
+        input.focus();
+      }
     });
 
-    /* auto-type intro */
-    function typeCmd(cmd, cb) {
-      let i = 0;
+    async function typeStartupCommand(cmd) {
       input.value = '';
-      const t = setInterval(() => {
-        input.value += cmd[i++];
-        if (i >= cmd.length) {
-          clearInterval(t);
-          setTimeout(() => { run(cmd); input.value = ''; cb && cb(); }, 240);
-        }
-      }, 55);
+      document.body.classList.add('is-typing-intro');
+      await wait(180);
+
+      for (let i = 0; i < cmd.length; i += 1) {
+        input.value += cmd[i];
+        await wait(randomBetween(INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax));
+      }
+
+      document.body.classList.remove('is-typing-intro');
+      await wait(INTRO_TIMING.afterCommand);
+      line(PS1, cmd);
+      input.value = '';
     }
 
-    setTimeout(() => typeCmd('about'), 700);
+    function introWriteDelay(text) {
+      return clamp(950 / Math.max(text.length, 1), 16, 46);
+    }
+
+    async function writeIntroLine(text) {
+      introWriterText.textContent = '';
+      document.body.classList.add('is-live-writing');
+
+      for (let i = 0; i < text.length; i += 1) {
+        introWriterText.textContent += text[i];
+        await wait(introWriteDelay(text));
+      }
+    }
+
+    async function printCinematicAbout() {
+      for (const step of introAboutSteps) {
+        if (step.kind === 'space') {
+          document.body.classList.remove('is-live-writing');
+          introWriterText.textContent = '';
+          space();
+          await wait(140);
+          continue;
+        }
+
+        await writeIntroLine(step.text);
+        await wait(120);
+        print(step.html);
+        introWriterText.textContent = '';
+        await wait(INTRO_TIMING.lineHold);
+      }
+
+      document.body.classList.remove('is-live-writing');
+    }
+
+    async function playStartupIntro() {
+      input.readOnly = true;
+
+      if (prefersReducedMotion()) {
+        run('about');
+        input.readOnly = false;
+        revealSite();
+        return;
+      }
+
+      await typeStartupCommand('about');
+      await printCinematicAbout();
+      input.readOnly = false;
+      await wait(INTRO_TIMING.afterOutput);
+      revealSite();
+    }
+
+    setTimeout(() => { playStartupIntro(); }, prefersReducedMotion() ? 0 : INTRO_TIMING.startDelay);
   })();
   </script>
 </body>
