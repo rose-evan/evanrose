@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Evan Rose</title>
-  <meta name="description" content="Evan Rose writes about building, AI tools, robotics, and careful software.">
+  <meta name="description" content="Evan Rose writes, builds software, thinks about robotics, and shares useful recommendations.">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="data:,">
   <style>
@@ -139,33 +139,60 @@
       font-size: clamp(1rem, 1.4vw, 1.2rem);
     }
 
-    .writing-list {
+    .home-section {
+      margin: 0 0 1.9rem;
+    }
+
+    .section-kicker {
+      margin: 0 0 0.55rem;
+      color: var(--quiet);
+      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+      font-size: 0.84rem;
+      letter-spacing: 0;
+      text-transform: lowercase;
+    }
+
+    .home-list {
       display: grid;
       gap: 0.55rem;
-      margin: 0 0 1.9rem;
+      margin: 0;
       padding: 0;
       list-style: none;
       font-size: clamp(1.1rem, 2vw, 1.55rem);
     }
 
-    .writing-list li {
+    .home-list li {
       display: grid;
-      grid-template-columns: 5rem minmax(0, max-content);
+      grid-template-columns: 5rem minmax(0, 1fr);
       align-items: baseline;
       column-gap: 0.7rem;
     }
 
-    .writing-list time {
+    .list-type {
       color: #dcdcdc;
       font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
       font-size: 0.9em;
       white-space: nowrap;
     }
 
-    .writing-list a {
+    .home-list a,
+    .list-copy {
       width: fit-content;
       max-width: 100%;
       overflow-wrap: anywhere;
+    }
+
+    .list-copy {
+      color: #e4e4e4;
+    }
+
+    .list-quote {
+      grid-column: 2;
+      max-width: 38rem;
+      margin: 0.15rem 0 0;
+      color: var(--muted);
+      font-size: 0.72em;
+      line-height: 1.45;
     }
 
     .socials {
@@ -565,12 +592,12 @@
         margin-bottom: 1.6rem;
       }
 
-      .writing-list {
+      .home-list {
         gap: 0.75rem;
         font-size: 1.15rem;
       }
 
-      .writing-list li {
+      .home-list li {
         grid-template-columns: 4.2rem minmax(0, 1fr);
       }
 
@@ -637,28 +664,32 @@
     <section class="home" aria-labelledby="name">
       <h1 class="identity" id="name">Evan Rose</h1>
       <p class="intro-copy">
-        I build software, think about general purpose robotics, and write notes on tools,
-        incentives, interfaces, and the craft of making ambitious technology legible.
+        I build software, think about general purpose robotics, write essays, and keep
+        track of ambitious technology worth understanding.
       </p>
 
-      <ol class="writing-list" aria-label="Writing">
-        <li>
-          <time datetime="2026-06">06/26</time>
-          <a href="writing/incentives-and-trust.html">Incentives and Trust</a>
-        </li>
-        <li>
-          <time datetime="2026-06">06/26</time>
-          <a href="writing/general-purpose-robotics.html">General Purpose Robotics</a>
-        </li>
-        <li>
-          <time datetime="2026-06">06/26</time>
-          <a href="writing/legible-ai-tools.html">Legible AI Tools</a>
-        </li>
-        <li>
-          <time datetime="2026-06">06/26</time>
-          <a href="writing/craft-layer.html">The Craft Layer</a>
-        </li>
-      </ol>
+      <section class="home-section" aria-labelledby="essays-heading">
+        <h2 class="section-kicker" id="essays-heading">essays</h2>
+        <ol class="home-list" aria-label="Essays">
+          <li>
+            <span class="list-type">soon</span>
+            <a href="writing/">First essay coming soon.</a>
+          </li>
+        </ol>
+      </section>
+
+      <section class="home-section" aria-labelledby="recommendations-heading">
+        <h2 class="section-kicker" id="recommendations-heading">recommendations</h2>
+        <ol class="home-list" aria-label="Recommendations">
+          <li>
+            <span class="list-type">watch</span>
+            <span>
+              <a href="https://www.youtube.com/watch?v=0HqUYpGQIfs" target="_blank" rel="noopener">Emergent Complexity</a>
+            </span>
+            <blockquote class="list-quote">"If you wish to make an apple pie from scratch, you must first invent the universe."</blockquote>
+          </li>
+        </ol>
+      </section>
 
       <nav class="socials" aria-label="Links">
         <span class="email-reveal">
@@ -680,6 +711,7 @@
       <span class="titlebar-links" aria-label="quick commands">
         <button type="button" data-cmd="about">about</button>
         <button type="button" data-cmd="writing">writing</button>
+        <button type="button" data-cmd="recs">recs</button>
         <button type="button" data-cmd="contact">contact</button>
       </span>
     </div>
@@ -1243,6 +1275,7 @@
     const suggestions = [
       ['about', 'who i am'],
       ['writing', 'essays and notes'],
+      ['recs', 'things i recommend'],
       ['work', 'things i have built and worked on'],
       ['projects', 'current interests and project directions'],
       ['why', 'why general purpose robotics'],
@@ -1250,11 +1283,16 @@
       ['links', 'around the web']
     ];
 
-    const articles = [
-      ['06/26', 'Incentives and Trust', 'writing/incentives-and-trust.html'],
-      ['06/26', 'General Purpose Robotics', 'writing/general-purpose-robotics.html'],
-      ['06/26', 'Legible AI Tools', 'writing/legible-ai-tools.html'],
-      ['06/26', 'The Craft Layer', 'writing/craft-layer.html']
+    const writings = [];
+
+    const recommendations = [
+      [
+        'watch',
+        'Emergent Complexity',
+        'https://www.youtube.com/watch?v=0HqUYpGQIfs',
+        'Emergent Garden',
+        'If you wish to make an apple pie from scratch, you must first invent the universe.'
+      ]
     ];
 
     const introAboutSteps = [
@@ -1310,10 +1348,23 @@
       body.scrollTop = body.scrollHeight;
     }
 
-    function printArticles() {
+    function printRecommendations() {
+      space();
+      print('<span class="c">recommendations</span>');
+      recommendations.forEach(([type, title, href, creator, quote]) => {
+        print(`${type}  <a href="${href}" target="_blank" rel="noopener">${title}</a>${creator ? ` - ${creator}` : ''}`);
+        if (quote) print(`       "${esc(quote)}"`);
+      });
+      space();
+    }
+
+    function printWriting() {
       space();
       print('<span class="c">writing</span>');
-      articles.forEach(([date, title, href]) => {
+      if (writings.length === 0) {
+        print('first essay coming soon at <a href="writing/">/writing/</a>.');
+      }
+      writings.forEach(([date, title, href]) => {
         print(`${date}  <a href="${href}">${title}</a>`);
       });
       space();
@@ -1346,9 +1397,15 @@
         commandList(suggestions.slice(1, 7));
         chips(suggestions.slice(1, 7));
       },
-      writing() { printArticles(); },
-      articles() { printArticles(); },
-      notes() { printArticles(); },
+      recs() { printRecommendations(); },
+      media() { printRecommendations(); },
+      reading() { printRecommendations(); },
+      watching() { printRecommendations(); },
+      recommendations() { printRecommendations(); },
+      writing() { printWriting(); },
+      essays() { printWriting(); },
+      articles() { printWriting(); },
+      notes() { printWriting(); },
       work() {
         space();
         print('<span class="c">work</span>');
@@ -1358,7 +1415,7 @@
         print('i care about the craft layer: interfaces, reliability,');
         print('iteration speed, and the small details that make tools usable.');
         space();
-        print('try <span class="c">writing</span> for longer notes.');
+        print('try <span class="c">writing</span> for essays or <span class="c">recs</span> for things i recommend.');
         space();
       },
       projects() {

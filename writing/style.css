@@ -89,6 +89,13 @@ p {
   font-weight: 400;
 }
 
+.empty-state {
+  max-width: 34rem;
+  color: var(--muted);
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+}
+
 .writing-list {
   display: grid;
   gap: 0.6rem;
