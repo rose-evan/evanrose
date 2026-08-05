@@ -8,6 +8,7 @@ test('loads the homepage directly without the terminal intro', () => {
   assert.doesNotMatch(html, /<aside[^>]+class="terminal"/i);
   assert.doesNotMatch(html, /terminal-ripple-canvas|INTRO_TIMING|playStartupIntro/);
   assert.match(html, /<h1 id="name">Evan Rose<\/h1>/);
+  assert.doesNotMatch(html, /Personal index|identity-mark/);
 });
 
 test('renders the two shader layers', () => {
