@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#dbe9ff">
+  <meta name="theme-color" content="#42bde1">
   <title>Evan Rose</title>
-  <meta name="description" content="Evan Rose — recommendations and ways to say hello.">
+  <meta name="description" content="Evan Rose — a personal index of recommendations and ways to say hello.">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="data:,">
   <style>
@@ -13,25 +13,15 @@
 
     :root {
       color-scheme: light;
-      --ink: #10131a;
-      --copy: #505968;
-      --quiet: #657080;
-      --accent: #3267f2;
-      --snow: #f7faff;
-      --glacier: #b9d8ff;
-      --meltwater: #bcecdf;
-      --glass: rgba(255, 255, 255, 0.72);
-      --glass-soft: rgba(255, 255, 255, 0.54);
-      --glass-line: rgba(255, 255, 255, 0.72);
-      --hairline: rgba(16, 19, 26, 0.1);
-      --shadow: rgba(24, 52, 112, 0.22);
-      --pointer-x: 68%;
-      --pointer-y: 28%;
+      --ink: #15171b;
+      --muted: #747a83;
+      --line: rgba(21, 23, 27, 0.1);
+      --paper: rgba(249, 250, 247, 0.94);
     }
 
     html {
       min-height: 100%;
-      background: #dbe9ff;
+      background: #2aa9d5;
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 16px;
@@ -41,564 +31,645 @@
     }
 
     body {
-      position: relative;
-      isolation: isolate;
       min-height: 100vh;
       min-height: 100svh;
       margin: 0;
       display: grid;
       place-items: center;
-      padding: clamp(1rem, 6vw, 5.625rem);
+      padding: clamp(1rem, 6.9vw, 6.25rem);
       overflow-x: hidden;
-      background: #dbe9ff;
-      transition: color 500ms ease, background-color 500ms ease;
+      background:
+        radial-gradient(circle at 12% 22%, #e6d7a8 0, transparent 34%),
+        radial-gradient(circle at 76% -8%, #d7e6bd 0, #43bde1 30%, transparent 54%),
+        radial-gradient(circle at 68% 104%, #071c73 0, #0739cd 30%, transparent 62%),
+        linear-gradient(145deg, #78b7e2, #27a9d7 46%, #d3d7c8);
     }
 
     button, a { font: inherit; }
-
     [hidden] { display: none !important; }
 
-    button { color: inherit; }
-
-    a { color: inherit; }
-
-    .gradient-field {
+    .liquid-canvas {
       position: fixed;
       z-index: 0;
-      inset: -10vmax;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 12%, var(--snow) 0 18%, transparent 43%),
-        radial-gradient(circle at 82% 22%, var(--meltwater) 0 12%, var(--glacier) 34%, transparent 62%),
-        radial-gradient(circle at 48% 110%, var(--accent) 0, #7aa7ff 30%, var(--snow) 68%);
-      transform: translateZ(0);
-    }
-
-    .gradient-field::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      background:
-        radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(244, 255, 252, 0.96) 0 6%, rgba(188, 236, 223, 0.72) 14%, transparent 35%),
-        conic-gradient(from 118deg at 48% 58%, rgba(50, 103, 242, 0.12), rgba(255, 255, 255, 0.62), rgba(188, 236, 223, 0.24), rgba(50, 103, 242, 0.12));
-      filter: blur(34px) saturate(1.12);
-      animation: field-drift 18s ease-in-out infinite alternate;
-      will-change: transform;
-    }
-
-    .gradient-field::after {
-      content: "";
-      position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(16, 19, 26, 0.34) 0.55px, transparent 0.7px);
-      background-size: 4px 4px;
-      opacity: 0.17;
-      -webkit-mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 16%, rgba(0, 0, 0, 0.7) 30%, transparent 62%);
-      mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 16%, rgba(0, 0, 0, 0.7) 30%, transparent 62%);
-      transition: opacity 500ms ease;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
-    .current {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(44px);
-      will-change: transform;
-    }
-
-    .current--cobalt {
-      left: -10%;
-      bottom: -38%;
-      width: 82%;
-      height: 70%;
-      opacity: 0.88;
-      background: linear-gradient(112deg, #3267f2 0%, #7fa9ff 56%, #bcecdf 100%);
-      animation: cobalt-current 15s ease-in-out infinite alternate;
-    }
-
-    .current--mint {
-      top: -31%;
-      right: -14%;
-      width: 64%;
-      height: 68%;
-      opacity: 0.72;
-      background: radial-gradient(circle at 44% 50%, #e9fff8 0%, #bcecdf 38%, #75a6ff 74%, transparent 100%);
-      animation: mint-current 17s ease-in-out infinite alternate;
-    }
-
-    @keyframes field-drift {
-      from { transform: rotate(-3deg) scale(1); }
-      to { transform: rotate(4deg) scale(1.08) translate3d(1.5%, -1%, 0); }
-    }
-
-    @keyframes cobalt-current {
-      from { transform: rotate(-10deg) translate3d(-2%, 3%, 0); }
-      to { transform: rotate(-4deg) translate3d(8%, -5%, 0) scale(1.08); }
-    }
-
-    @keyframes mint-current {
-      from { transform: rotate(14deg) translate3d(0, 0, 0); }
-      to { transform: rotate(4deg) translate3d(-11%, 9%, 0) scale(1.12); }
-    }
-
-    .glass {
+    .paper {
       position: relative;
       z-index: 1;
-      width: min(70rem, calc(100vw - clamp(2rem, 12vw, 10rem)));
-      min-height: min(45rem, calc(100svh - clamp(2rem, 12vw, 10rem)));
-      display: flex;
-      flex-direction: column;
-      padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5.5vw, 4.5rem);
+      width: min(77.5rem, calc(100vw - clamp(2rem, 13.8vw, 12.5rem)));
+      height: min(43.75rem, calc(100svh - clamp(2rem, 13.8vw, 12.5rem)));
+      min-height: 36rem;
       overflow: hidden;
       isolation: isolate;
-      border: 1px solid var(--glass-line);
-      border-radius: 1.75rem;
-      background: var(--glass);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2.25rem 5.625rem var(--shadow);
-      -webkit-backdrop-filter: blur(30px) saturate(1.12);
-      backdrop-filter: blur(30px) saturate(1.12);
-      transition: background-color 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 0.625rem;
+      background: var(--paper);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 1.75rem 4.5rem rgba(4, 22, 74, 0.34);
     }
 
-    .glass::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      top: -7rem;
-      right: -6rem;
-      width: 32rem;
-      height: 25rem;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(50, 103, 242, 0.08), transparent 68%);
-      transform: translate(calc((var(--pointer-x) - 50%) * 0.08), calc((var(--pointer-y) - 50%) * 0.08));
-      transition: transform 240ms ease-out;
-    }
-
-    .glass::after {
+    .paper::after {
       content: "";
       position: absolute;
       z-index: 0;
       inset: 0;
-      background-image: radial-gradient(rgba(16, 19, 26, 0.36) 0.55px, transparent 0.72px);
-      background-size: 4px 4px;
-      opacity: 0.09;
+      opacity: 0.16;
       pointer-events: none;
-      -webkit-mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 14%, rgba(0, 0, 0, 0.64) 28%, transparent 58%);
-      mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 14%, rgba(0, 0, 0, 0.64) 28%, transparent 58%);
-      transition: opacity 500ms ease;
+      background-image: radial-gradient(rgba(32, 38, 46, 0.5) 0.6px, transparent 0.75px);
+      background-size: 5px 5px;
+      -webkit-mask-image:
+        radial-gradient(ellipse 55% 38% at 65% 5%, #000, transparent 72%),
+        radial-gradient(ellipse 45% 30% at 20% 100%, #000, transparent 72%);
+      mask-image:
+        radial-gradient(ellipse 55% 38% at 65% 5%, #000, transparent 72%),
+        radial-gradient(ellipse 45% 30% at 20% 100%, #000, transparent 72%);
     }
 
-    .glass > * {
+    .webgl-ready .paper::after { display: none; }
+
+    .dither-canvas {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.56;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+
+    .content {
       position: relative;
       z-index: 1;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .brand-mark {
-      width: 2.125rem;
-      height: 2.125rem;
-      display: grid;
-      flex: 0 0 auto;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--ink);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      transition: background-color 500ms ease, color 500ms ease;
-    }
-
-    .brand-label {
-      font-size: 0.8125rem;
-      font-weight: 650;
-      letter-spacing: -0.01em;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .control {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 1px solid var(--hairline);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.66);
-      cursor: pointer;
-      transition: transform 180ms ease, background-color 180ms ease, border-color 500ms ease;
-    }
-
-    .control:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.9); }
-
-    .control:active { transform: translateY(0) scale(0.96); }
-
-    .control:focus-visible,
-    .recommendation:focus-visible,
-    .contact-link:focus-visible,
-    .brand:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
-    .control svg { width: 1rem; height: 1rem; }
-
-    .hero {
+      width: min(35rem, calc(100% - 3rem));
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      padding-top: clamp(4.75rem, 10vw, 6.375rem);
+      margin: 0 auto;
+      padding: clamp(3rem, 7.8vh, 4.375rem) 0;
     }
 
-    .eyebrow {
-      margin: 0;
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 750;
-      letter-spacing: 0.12em;
-      line-height: 1rem;
-      text-transform: uppercase;
+    .identity {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .identity-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.0625rem;
     }
 
     h1 {
       margin: 0;
       color: var(--ink);
-      font-size: clamp(3.5rem, 7.2vw, 4.75rem);
-      font-weight: 650;
-      letter-spacing: -0.055em;
-      line-height: 1;
-    }
-
-    .intro {
-      max-width: 32rem;
-      margin: 0;
-      color: var(--copy);
-      font-size: clamp(1rem, 1.6vw, 1.125rem);
-      letter-spacing: -0.015em;
-      line-height: 1.5;
-    }
-
-    .lower {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 3rem;
-      margin-top: auto;
-      padding-top: clamp(4rem, 9vw, 5.5rem);
-    }
-
-    .recommendation-wrap {
-      width: min(40.625rem, 100%);
-    }
-
-    .section-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.875rem;
-      color: var(--copy);
-      font-size: 0.75rem;
-      font-weight: 750;
-      letter-spacing: 0.1em;
-      line-height: 1rem;
-      text-transform: uppercase;
-    }
-
-    .count {
-      color: #7a8492;
-      font-weight: 500;
-      letter-spacing: 0;
-    }
-
-    .recommendation {
-      min-height: 5.75rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      padding: 1.125rem 1.25rem;
-      border: 1px solid var(--hairline);
-      border-radius: 1.125rem;
-      background: var(--glass-soft);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
-      text-decoration: none;
-      transition: transform 220ms ease, background-color 220ms ease, border-color 500ms ease;
-    }
-
-    .recommendation:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.76); }
-
-    .play {
-      width: 3rem;
-      height: 3rem;
-      display: grid;
-      flex: 0 0 auto;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--ink);
-      color: #fff;
-      transition: background-color 500ms ease, color 500ms ease;
-    }
-
-    .play svg { width: 0.9375rem; height: 1.0625rem; transform: translateX(1px); }
-
-    .recommendation-copy {
-      min-width: 0;
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .recommendation-title {
-      color: var(--ink);
-      font-size: 1.0625rem;
+      font-size: 0.875rem;
       font-weight: 650;
       letter-spacing: -0.02em;
-      line-height: 1.375rem;
+      line-height: 1.125rem;
     }
 
-    .recommendation-note {
-      color: var(--quiet);
+    .identity-note {
+      margin: 0;
+      color: var(--muted);
       font-size: 0.8125rem;
       line-height: 1.125rem;
     }
 
-    .arrow { width: 2rem; flex: 0 0 2rem; text-align: center; font-size: 1rem; }
-
-    .contacts {
-      display: flex;
+    .identity-mark {
+      width: 2.25rem;
+      height: 2.25rem;
+      display: grid;
       flex: 0 0 auto;
-      align-items: center;
-      gap: 0.5rem;
+      place-items: center;
+      border-radius: 0.5rem;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .recommendations {
+      padding-top: clamp(5rem, 11.6vh, 6.5rem);
+    }
+
+    .section-title {
+      margin: 0 0 1.25rem;
+      color: var(--ink);
+      font-size: 0.875rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.125rem;
+    }
+
+    .recommendation {
+      display: grid;
+      grid-template-columns: 10rem minmax(0, 1fr);
+      gap: 2.75rem;
+      padding: 1.875rem 0 1.625rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+      transition: opacity 160ms ease;
+    }
+
+    .recommendation:hover { opacity: 0.58; }
+
+    .recommendation:focus-visible,
+    .contact-link:focus-visible,
+    .shader-control:focus-visible {
+      outline: 2px solid #0759dd;
+      outline-offset: 3px;
+    }
+
+    .recommendation-name,
+    .recommendation-copy {
+      font-size: 0.875rem;
+      line-height: 1.3125rem;
+    }
+
+    .recommendation-name { color: var(--ink); }
+    .recommendation-copy { color: var(--muted); }
+
+    .contact {
+      margin-top: auto;
+      color: var(--muted);
+      font-size: 0.875rem;
+      line-height: 1.3125rem;
     }
 
     .contact-link {
-      height: 2.75rem;
-      min-width: 2.75rem;
+      color: var(--ink);
+      text-decoration-color: rgba(21, 23, 27, 0.28);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    .shader-controls {
+      position: absolute;
+      z-index: 3;
+      top: 1.125rem;
+      right: 1.25rem;
+      display: flex;
+      align-items: center;
+      padding: 0.25rem;
+      border: 1px solid rgba(21, 23, 27, 0.08);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 0.25rem 0.875rem rgba(21, 23, 27, 0.08);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .shader-control {
+      width: 2.125rem;
+      height: 1.875rem;
       display: grid;
       place-items: center;
-      padding: 0 1.125rem;
-      border: 1px solid var(--hairline);
-      border-radius: 1.375rem;
-      background: var(--glass-soft);
-      color: var(--ink);
-      font-size: 0.8125rem;
-      font-weight: 650;
-      text-decoration: none;
-      transition: transform 180ms ease, background-color 180ms ease, border-color 500ms ease;
-    }
-
-    .contact-link--round { width: 2.75rem; padding: 0; border-radius: 50%; }
-
-    .contact-link:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.76); }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
       padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
       border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
     }
 
-    body[data-theme="night"] {
-      color-scheme: dark;
-      --ink: #f7faff;
-      --copy: #d5def0;
-      --quiet: #aebbd1;
-      --accent: #8bb0ff;
-      --snow: #080c18;
-      --glacier: #17346e;
-      --meltwater: #185c63;
-      --glass: rgba(8, 13, 27, 0.64);
-      --glass-soft: rgba(10, 18, 36, 0.5);
-      --glass-line: rgba(255, 255, 255, 0.16);
-      --hairline: rgba(255, 255, 255, 0.14);
-      --shadow: rgba(0, 0, 0, 0.42);
-      background: #070b17;
-    }
+    .shader-control + .shader-control { border-left: 1px solid rgba(21, 23, 27, 0.08); }
+    .shader-control:hover { background: rgba(21, 23, 27, 0.045); }
+    .shader-control svg { width: 0.875rem; height: 0.875rem; }
 
-    body[data-theme="night"] .control,
-    body[data-theme="night"] .recommendation,
-    body[data-theme="night"] .contact-link { background: rgba(10, 18, 36, 0.52); }
-
-    body[data-theme="night"] .control:hover,
-    body[data-theme="night"] .recommendation:hover,
-    body[data-theme="night"] .contact-link:hover { background: rgba(24, 40, 74, 0.72); }
-
-    body[data-theme="night"] .brand-mark,
-    body[data-theme="night"] .play { background: #f7faff; color: #10131a; }
-
-    body.motion-paused .gradient-field::before,
-    body.motion-paused .current { animation-play-state: paused; }
-
-    body.motion-paused .gradient-field::after { opacity: 0.08; }
-
-    body.motion-paused .glass::after { opacity: 0.035; }
-
-    @media (max-width: 64rem) {
-      .glass { width: min(100%, 52rem); min-height: min(45rem, calc(100svh - 2rem)); }
-      .lower { align-items: stretch; flex-direction: column; gap: 1.5rem; }
-      .recommendation-wrap { width: 100%; }
-      .contacts { align-self: flex-end; }
-    }
-
-    @media (max-width: 40rem) {
+    @media (max-width: 44rem) {
       body { place-items: start center; padding: 1rem; }
-      .glass { min-height: calc(100svh - 2rem); border-radius: 1.5rem; }
-      .brand-label { display: none; }
-      .hero { padding-top: 4.75rem; }
-      h1 { font-size: clamp(3.25rem, 17vw, 4rem); }
-      .lower { padding-top: 4.5rem; }
-      .recommendation { align-items: flex-start; gap: 0.875rem; padding: 1rem; }
-      .play { width: 2.5rem; height: 2.5rem; }
-      .recommendation-note { font-size: 0.75rem; }
-      .arrow { width: 1.25rem; flex-basis: 1.25rem; }
-      .contacts { align-self: flex-start; }
+
+      .paper {
+        width: calc(100vw - 2rem);
+        height: calc(100svh - 2rem);
+        min-height: 38rem;
+        border-radius: 0.75rem;
+      }
+
+      .content {
+        width: calc(100% - 3rem);
+        padding: 3.25rem 0 2.25rem;
+      }
+
+      .recommendations { padding-top: 6rem; }
+
+      .recommendation {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1.5rem 0;
+      }
+
+      .shader-controls { top: 1rem; right: 1rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="gradient-field" aria-hidden="true">
-    <div class="current current--cobalt"></div>
-    <div class="current current--mint"></div>
-  </div>
+  <canvas class="liquid-canvas" id="liquid-canvas" aria-hidden="true"></canvas>
 
-  <main class="glass" aria-labelledby="name">
-    <header class="topbar">
-      <a class="brand" href="./" aria-label="Evan Rose home">
-        <span class="brand-mark" aria-hidden="true">ER</span>
-        <span class="brand-label">evanrose.com</span>
-      </a>
+  <main class="paper" id="paper" aria-labelledby="name">
+    <canvas class="dither-canvas" id="dither-canvas" aria-hidden="true"></canvas>
 
-      <div class="controls" aria-label="Page controls">
-        <button class="control" id="motion-toggle" type="button" aria-label="Pause background motion" aria-pressed="false" title="Pause background motion">
-          <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M7 4v16M17 4v16"/></svg>
-          <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-        </button>
-        <button class="control" id="theme-toggle" type="button" aria-label="Switch to night theme" aria-pressed="false" title="Switch to night theme">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></svg>
-        </button>
-      </div>
-    </header>
+    <div class="shader-controls" aria-label="Shader controls">
+      <button class="shader-control" id="motion-toggle" type="button" aria-label="Pause shader motion" aria-pressed="false" title="Pause shader motion">
+        <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M7 4v16M17 4v16"/></svg>
+        <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
+      <button class="shader-control" id="texture-toggle" type="button" aria-label="Use sage shader texture" aria-pressed="false" title="Use sage shader texture">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2"/></svg>
+      </button>
+    </div>
 
-    <section class="hero">
-      <p class="eyebrow">Personal index · 2026</p>
-      <h1 id="name">Evan Rose</h1>
-      <p class="intro">A few things worth keeping close, plus a simple way to say hello.</p>
-    </section>
-
-    <div class="lower">
-      <section class="recommendation-wrap" aria-labelledby="recommendations-heading">
-        <div class="section-label">
-          <span id="recommendations-heading">Recommendation</span>
-          <span class="count">01 / 01</span>
+    <div class="content">
+      <header class="identity">
+        <div class="identity-copy">
+          <h1 id="name">Evan Rose</h1>
+          <p class="identity-note">Personal index</p>
         </div>
+        <span class="identity-mark" aria-hidden="true">ER</span>
+      </header>
+
+      <section class="recommendations" aria-labelledby="recommendations-heading">
+        <h2 class="section-title" id="recommendations-heading">Recommendation</h2>
         <a class="recommendation" href="https://www.youtube.com/watch?v=0HqUYpGQIfs" target="_blank" rel="noopener noreferrer">
-          <span class="play" aria-hidden="true">
-            <svg viewBox="0 0 15 17" fill="none"><path d="M14 8.5 1 16V1l13 7.5Z" fill="currentColor"/></svg>
-          </span>
-          <span class="recommendation-copy">
-            <span class="recommendation-title">Emergent Complexity</span>
-            <span class="recommendation-note">“To make an apple pie from scratch, invent the universe.”</span>
-          </span>
-          <span class="arrow" aria-hidden="true">↗</span>
-          <span class="sr-only">Opens on YouTube in a new tab</span>
+          <span class="recommendation-name">Emergent Complexity</span>
+          <span class="recommendation-copy">Carl Sagan on complexity, emergence, and why making anything from scratch begins with a universe.</span>
         </a>
       </section>
 
-      <nav class="contacts" aria-label="Contact and social links">
-        <a class="contact-link" href="mailto:evanrose@ucla.edu">email</a>
-        <a class="contact-link contact-link--round" href="https://x.com/evanr0se" target="_blank" rel="noopener noreferrer" aria-label="Evan Rose on X">X</a>
-        <a class="contact-link contact-link--round" href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener noreferrer" aria-label="Evan Rose on LinkedIn">in</a>
-      </nav>
+      <footer class="contact">
+        Find me on
+        <a class="contact-link" href="https://x.com/evanr0se" target="_blank" rel="noopener noreferrer">X</a>,
+        <a class="contact-link" href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener noreferrer">LinkedIn</a>,
+        or <a class="contact-link" href="mailto:evanrose@ucla.edu">email</a>.
+      </footer>
     </div>
   </main>
 
+  <script id="fullscreen-vertex" type="x-shader/x-vertex">
+#version 300 es
+const vec2 POSITIONS[3] = vec2[3](
+  vec2(-1.0, -1.0),
+  vec2(3.0, -1.0),
+  vec2(-1.0, 3.0)
+);
+
+void main() {
+  gl_Position = vec4(POSITIONS[gl_VertexID], 0.0, 1.0);
+}
+  </script>
+
+  <script id="liquid-fragment" type="x-shader/x-fragment">
+#version 300 es
+precision highp float;
+
+out vec4 outColor;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
+
+float hash21(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x),
+    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0)), f.x),
+    f.y
+  );
+}
+
+float fbm(vec2 p) {
+  float value = 0.0;
+  float amplitude = 0.5;
+  mat2 rotation = mat2(0.80, -0.60, 0.60, 0.80);
+  for (int i = 0; i < 5; i++) {
+    value += amplitude * noise(p);
+    p = rotation * p * 2.03 + 7.1;
+    amplitude *= 0.5;
+  }
+  return value;
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  float aspect = u_resolution.x / u_resolution.y;
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+  vec2 mouse = (u_mouse - 0.5) * vec2(aspect, 1.0);
+  float lens = exp(-dot(p - mouse, p - mouse) * 5.5);
+
+  float t = u_time * 0.045;
+  vec2 q = p;
+  q += 0.32 * vec2(
+    fbm(p * 0.86 + vec2(t, -t * 0.54)),
+    fbm(p * 0.91 + vec2(4.2 - t * 0.42, 2.8 + t))
+  );
+  q += normalize(p - mouse + 0.0001) * lens * 0.055;
+
+  float warp = fbm(q * 1.16 + vec2(-t * 0.5, t * 0.28));
+  float ribbon = sin(q.x * 1.05 + q.y * 1.78 + warp * 2.72 + t * 1.45);
+  ribbon += 0.52 * sin(q.y * 2.40 - q.x * 0.55 - t * 0.88 + warp * 1.92);
+
+  vec3 deep = vec3(0.004, 0.055, 0.31);
+  vec3 cobalt = vec3(0.015, 0.25, 0.82);
+  vec3 cyan = vec3(0.12, 0.68, 0.84);
+  vec3 sky = vec3(0.45, 0.72, 0.88);
+  vec3 cream = vec3(0.90, 0.85, 0.66);
+
+  vec3 color = deep;
+  color = mix(color, cobalt, smoothstep(-1.25, -0.35, ribbon));
+  color = mix(color, cyan, smoothstep(-0.36, 0.18, ribbon));
+  color = mix(color, sky, smoothstep(0.10, 0.54, ribbon));
+  color = mix(color, cream, smoothstep(0.48, 1.12, ribbon));
+
+  float edgeA = exp(-abs(ribbon - 0.44) * 24.0);
+  float edgeB = exp(-abs(ribbon + 0.50) * 18.0);
+  color += vec3(0.50, 0.77, 0.82) * edgeA * 0.20;
+  color += vec3(0.05, 0.17, 0.44) * edgeB * 0.14;
+  color *= 0.92 + 0.14 * fbm(q * 2.1);
+
+  float vignette = smoothstep(1.15, 0.18, length((uv - 0.5) * vec2(0.82, 1.0)));
+  color *= 0.82 + 0.18 * vignette;
+  outColor = vec4(color, 1.0);
+}
+  </script>
+
+  <script id="dither-fragment" type="x-shader/x-fragment">
+#version 300 es
+precision highp float;
+
+out vec4 outColor;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
+uniform float u_dpr;
+uniform float u_palette;
+uniform float u_scroll;
+
+float hash21(vec2 p) {
+  p = fract(p * vec2(443.8975, 397.2973));
+  p += dot(p, p.yx + 19.19);
+  return fract(p.x * p.y);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x),
+    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0)), f.x),
+    f.y
+  );
+}
+
+float fbm(vec2 p) {
+  float value = 0.0;
+  float amplitude = 0.5;
+  mat2 rotation = mat2(0.82, -0.57, 0.57, 0.82);
+  for (int i = 0; i < 5; i++) {
+    value += amplitude * noise(p);
+    p = rotation * p * 2.06 + 5.4;
+    amplitude *= 0.5;
+  }
+  return value;
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  float aspect = u_resolution.x / u_resolution.y;
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+  vec2 mouse = (u_mouse - 0.5) * vec2(aspect, 1.0);
+  vec2 toPointer = p - mouse;
+  float pointerDistance = length(toPointer);
+  float lens = exp(-pointerDistance * pointerDistance * 20.0);
+
+  float t = u_time * 0.065;
+  vec2 domain = p * 1.55;
+  vec2 flow = vec2(
+    fbm(domain + vec2(t, -t * 0.62 + u_scroll)),
+    fbm(domain + vec2(5.2 - t * 0.48, 2.7 + t))
+  );
+
+  vec2 warpedUv = uv;
+  warpedUv += normalize(toPointer + 0.0001) * lens * (0.042 + 0.014 * sin(u_time * 0.7));
+  warpedUv += (flow - 0.5) * 0.034;
+
+  float field = fbm(p * 1.48 + flow * 1.72 + vec2(-t * 0.22, t * 0.31 + u_scroll));
+  float sweep = 0.5 + 0.5 * sin(p.x * 2.15 - p.y * 3.25 + flow.x * 5.2 + t * 0.9);
+  float density = smoothstep(0.50, 0.80, field * 0.76 + sweep * 0.28 + lens * 0.13);
+
+  vec2 cssPixels = warpedUv * u_resolution / u_dpr;
+  float dotCell = 4.1;
+  vec2 dotPoint = fract(cssPixels / dotCell) - 0.5;
+  float dotRadius = mix(0.045, 0.38, density);
+  float graphiteDot = 1.0 - smoothstep(dotRadius, dotRadius + 0.075, length(dotPoint));
+
+  float clusterCell = 34.0;
+  vec2 clusterId = floor(cssPixels / clusterCell);
+  vec2 clusterPoint = fract(cssPixels / clusterCell) - 0.5;
+  clusterPoint += (vec2(hash21(clusterId), hash21(clusterId + 8.7)) - 0.5) * 0.12;
+  float clusterField = smoothstep(0.34, 0.67, field + sweep * 0.22);
+  float cluster = 1.0 - smoothstep(0.08, 0.23, length(clusterPoint) + (1.0 - clusterField) * 0.26);
+  float dust = 1.0 - smoothstep(0.20, 0.47, length(fract(cssPixels / 5.2) - 0.5));
+  cluster = max(cluster, dust * clusterField * 0.32);
+
+  float particle = mix(graphiteDot, cluster, u_palette);
+  float alpha = mix(
+    graphiteDot * (0.07 + density * 0.70),
+    cluster * (0.12 + clusterField * 0.58),
+    u_palette
+  );
+
+  float edgeFade = smoothstep(0.0, 0.06, uv.x) * smoothstep(0.0, 0.06, uv.y);
+  edgeFade *= smoothstep(0.0, 0.06, 1.0 - uv.x) * smoothstep(0.0, 0.06, 1.0 - uv.y);
+  alpha *= edgeFade;
+
+  vec3 graphite = vec3(0.10, 0.12, 0.15);
+  vec3 sage = vec3(0.34, 0.51, 0.22);
+  vec3 ink = mix(graphite, sage, u_palette);
+  outColor = vec4(ink * particle, alpha);
+}
+  </script>
+
   <script>
     (() => {
-      const root = document.documentElement;
       const body = document.body;
+      const paper = document.getElementById('paper');
       const motionButton = document.getElementById('motion-toggle');
-      const themeButton = document.getElementById('theme-toggle');
+      const textureButton = document.getElementById('texture-toggle');
       const pauseIcon = motionButton.querySelector('.pause-icon');
       const playIcon = motionButton.querySelector('.play-icon');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const storedTheme = localStorage.getItem('evanrose:theme');
-      let frame = 0;
+      const vertexSource = document.getElementById('fullscreen-vertex').textContent.trim();
 
-      function setTheme(theme) {
-        const isNight = theme === 'night';
-        body.dataset.theme = isNight ? 'night' : 'day';
-        themeButton.setAttribute('aria-pressed', String(isNight));
-        themeButton.setAttribute('aria-label', isNight ? 'Switch to day theme' : 'Switch to night theme');
-        themeButton.title = isNight ? 'Switch to day theme' : 'Switch to night theme';
-        document.querySelector('meta[name="theme-color"]').content = isNight ? '#070b17' : '#dbe9ff';
+      function compile(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
       }
 
-      function setMotionPaused(paused) {
-        body.classList.toggle('motion-paused', paused);
+      function createRenderer(canvas, fragmentId, transparent) {
+        const gl = canvas.getContext('webgl2', {
+          alpha: transparent,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          premultipliedAlpha: true,
+          powerPreference: 'high-performance'
+        });
+        if (!gl) return null;
+
+        const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource);
+        const fragment = compile(gl, gl.FRAGMENT_SHADER, document.getElementById(fragmentId).textContent.trim());
+        if (!vertex || !fragment) return null;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertex);
+        gl.attachShader(program, fragment);
+        gl.linkProgram(program);
+        gl.deleteShader(vertex);
+        gl.deleteShader(fragment);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+
+        const uniforms = {};
+        ['u_resolution', 'u_mouse', 'u_time', 'u_dpr', 'u_palette', 'u_scroll'].forEach(name => {
+          uniforms[name] = gl.getUniformLocation(program, name);
+        });
+
+        function resize() {
+          const rect = canvas.getBoundingClientRect();
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const width = Math.max(1, Math.round(rect.width * dpr));
+          const height = Math.max(1, Math.round(rect.height * dpr));
+          if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+          }
+          return dpr;
+        }
+
+        function draw(state) {
+          const dpr = resize();
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          gl.useProgram(program);
+          if (transparent) gl.clear(gl.COLOR_BUFFER_BIT);
+          if (uniforms.u_resolution) gl.uniform2f(uniforms.u_resolution, canvas.width, canvas.height);
+          if (uniforms.u_mouse) gl.uniform2f(uniforms.u_mouse, state.mouseX, state.mouseY);
+          if (uniforms.u_time) gl.uniform1f(uniforms.u_time, state.time);
+          if (uniforms.u_dpr) gl.uniform1f(uniforms.u_dpr, dpr);
+          if (uniforms.u_palette) gl.uniform1f(uniforms.u_palette, state.palette);
+          if (uniforms.u_scroll) gl.uniform1f(uniforms.u_scroll, window.scrollY * 0.002);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+
+        return { draw };
+      }
+
+      const liquid = createRenderer(
+        document.getElementById('liquid-canvas'),
+        'liquid-fragment',
+        false
+      );
+      const dither = createRenderer(
+        document.getElementById('dither-canvas'),
+        'dither-fragment',
+        true
+      );
+
+      if (liquid && dither) body.classList.add('webgl-ready');
+
+      const state = {
+        time: 0,
+        palette: 0,
+        paused: reduceMotion.matches,
+        mouseX: 0.68,
+        mouseY: 0.62,
+        targetX: 0.68,
+        targetY: 0.62,
+        panelTargetX: 0.68,
+        panelTargetY: 0.62
+      };
+
+      function setPaused(paused) {
+        state.paused = paused;
         motionButton.setAttribute('aria-pressed', String(paused));
-        motionButton.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
-        motionButton.title = paused ? 'Play background motion' : 'Pause background motion';
+        motionButton.setAttribute('aria-label', paused ? 'Play shader motion' : 'Pause shader motion');
+        motionButton.title = paused ? 'Play shader motion' : 'Pause shader motion';
         pauseIcon.hidden = paused;
         playIcon.hidden = !paused;
       }
 
-      function updatePointer(event) {
-        if (reduceMotion.matches) return;
-        const x = (event.clientX / window.innerWidth) * 100;
-        const y = (event.clientY / window.innerHeight) * 100;
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          root.style.setProperty('--pointer-x', `${x.toFixed(2)}%`);
-          root.style.setProperty('--pointer-y', `${y.toFixed(2)}%`);
-        });
+      function setPalette(palette) {
+        state.palette = palette;
+        const sage = palette === 1;
+        textureButton.setAttribute('aria-pressed', String(sage));
+        textureButton.setAttribute('aria-label', sage ? 'Use graphite shader texture' : 'Use sage shader texture');
+        textureButton.title = sage ? 'Use graphite shader texture' : 'Use sage shader texture';
       }
 
-      setTheme(storedTheme === 'night' ? 'night' : 'day');
-      setMotionPaused(reduceMotion.matches);
+      function updatePointer(event) {
+        state.targetX = Math.max(0, Math.min(1, event.clientX / window.innerWidth));
+        state.targetY = Math.max(0, Math.min(1, 1 - event.clientY / window.innerHeight));
 
+        const rect = paper.getBoundingClientRect();
+        state.panelTargetX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        state.panelTargetY = Math.max(0, Math.min(1, 1 - (event.clientY - rect.top) / rect.height));
+      }
+
+      motionButton.addEventListener('click', () => setPaused(!state.paused));
+      textureButton.addEventListener('click', () => setPalette(state.palette === 0 ? 1 : 0));
       window.addEventListener('pointermove', updatePointer, { passive: true });
-      motionButton.addEventListener('click', () => {
-        setMotionPaused(!body.classList.contains('motion-paused'));
-      });
-      themeButton.addEventListener('click', () => {
-        const nextTheme = body.dataset.theme === 'night' ? 'day' : 'night';
-        setTheme(nextTheme);
-        localStorage.setItem('evanrose:theme', nextTheme);
-      });
-      reduceMotion.addEventListener('change', event => setMotionPaused(event.matches));
+      reduceMotion.addEventListener('change', event => setPaused(event.matches));
+      setPaused(state.paused);
+      setPalette(0);
+
+      let last = performance.now();
+      function frame(now) {
+        const delta = Math.min(0.05, Math.max(0, (now - last) / 1000));
+        last = now;
+        if (!state.paused) state.time += delta;
+
+        const pointerEase = state.paused ? 0 : 0.075;
+        state.mouseX += ((paper.matches(':hover') ? state.panelTargetX : state.targetX) - state.mouseX) * pointerEase;
+        state.mouseY += ((paper.matches(':hover') ? state.panelTargetY : state.targetY) - state.mouseY) * pointerEase;
+
+        if (liquid) liquid.draw({
+          time: state.time,
+          palette: state.palette,
+          mouseX: state.targetX,
+          mouseY: state.targetY
+        });
+        if (dither) dither.draw(state);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
     })();
   </script>
 </body>
