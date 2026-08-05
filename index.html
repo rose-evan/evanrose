@@ -3,1642 +3,603 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#dbe9ff">
   <title>Evan Rose</title>
-  <meta name="description" content="Evan Rose builds software, documents projects, thinks about robotics, and shares useful recommendations.">
+  <meta name="description" content="Evan Rose — recommendations and ways to say hello.">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="data:,">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
-
     *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      color-scheme: dark;
-      --bg: #050505;
-      --bg-soft: #0d0d0d;
-      --fg: #eeeeee;
-      --muted: #9a9a9a;
-      --quiet: #5e5e5e;
-      --line: #242424;
-      --green: #4ade80;
-      --orange: #fb923c;
-      --red: #ff5f57;
-      --yellow: #febc2e;
-      --terminal-width: min(700px, calc(100vw - 2rem));
-      --terminal-height: min(500px, calc(100vh - 3rem));
-      --terminal-dock-margin: clamp(1rem, 4vw, 3rem);
-      --terminal-dock-width: min(780px, 38vw);
-      --terminal-dock-height: min(920px, calc(100vh - clamp(5rem, 8vw, 6rem)));
+      color-scheme: light;
+      --ink: #10131a;
+      --copy: #505968;
+      --quiet: #657080;
+      --accent: #3267f2;
+      --snow: #f7faff;
+      --glacier: #b9d8ff;
+      --meltwater: #bcecdf;
+      --glass: rgba(255, 255, 255, 0.72);
+      --glass-soft: rgba(255, 255, 255, 0.54);
+      --glass-line: rgba(255, 255, 255, 0.72);
+      --hairline: rgba(16, 19, 26, 0.1);
+      --shadow: rgba(24, 52, 112, 0.22);
+      --pointer-x: 68%;
+      --pointer-y: 28%;
     }
 
     html {
       min-height: 100%;
-      background: var(--bg);
-      color: var(--fg);
+      background: #dbe9ff;
+      color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.5;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      min-height: 100%;
+      position: relative;
+      isolation: isolate;
+      min-height: 100vh;
+      min-height: 100svh;
       margin: 0;
-      background:
-        radial-gradient(circle at 78% 12%, rgba(255,255,255,0.045), transparent 25rem),
-        var(--bg);
+      display: grid;
+      place-items: center;
+      padding: clamp(1rem, 6vw, 5.625rem);
       overflow-x: hidden;
+      background: #dbe9ff;
+      transition: color 500ms ease, background-color 500ms ease;
     }
 
-    body::before {
-      content: "";
+    button, a { font: inherit; }
+
+    [hidden] { display: none !important; }
+
+    button { color: inherit; }
+
+    a { color: inherit; }
+
+    .gradient-field {
       position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 30px 30px;
-      opacity: 0.36;
-      pointer-events: none;
       z-index: 0;
+      inset: -10vmax;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 12%, var(--snow) 0 18%, transparent 43%),
+        radial-gradient(circle at 82% 22%, var(--meltwater) 0 12%, var(--glacier) 34%, transparent 62%),
+        radial-gradient(circle at 48% 110%, var(--accent) 0, #7aa7ff 30%, var(--snow) 68%);
+      transform: translateZ(0);
     }
 
-    .terminal-ripple-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.58;
-      image-rendering: pixelated;
-    }
-
-    body::after {
+    .gradient-field::before {
       content: "";
-      position: fixed;
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(244, 255, 252, 0.96) 0 6%, rgba(188, 236, 223, 0.72) 14%, transparent 35%),
+        conic-gradient(from 118deg at 48% 58%, rgba(50, 103, 242, 0.12), rgba(255, 255, 255, 0.62), rgba(188, 236, 223, 0.24), rgba(50, 103, 242, 0.12));
+      filter: blur(34px) saturate(1.12);
+      animation: field-drift 18s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .gradient-field::after {
+      content: "";
+      position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.09) 2px,
-        rgba(0,0,0,0.09) 4px
-      );
-      pointer-events: none;
-      z-index: 3;
+      background-image: radial-gradient(rgba(16, 19, 26, 0.34) 0.55px, transparent 0.7px);
+      background-size: 4px 4px;
+      opacity: 0.17;
+      -webkit-mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 16%, rgba(0, 0, 0, 0.7) 30%, transparent 62%);
+      mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 16%, rgba(0, 0, 0, 0.7) 30%, transparent 62%);
+      transition: opacity 500ms ease;
     }
 
-    a {
-      color: inherit;
-      text-decoration-color: currentColor;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.18em;
+    .current {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(44px);
+      will-change: transform;
     }
 
-    a:hover,
-    a:focus-visible {
-      color: #ffffff;
-      outline: none;
+    .current--cobalt {
+      left: -10%;
+      bottom: -38%;
+      width: 82%;
+      height: 70%;
+      opacity: 0.88;
+      background: linear-gradient(112deg, #3267f2 0%, #7fa9ff 56%, #bcecdf 100%);
+      animation: cobalt-current 15s ease-in-out infinite alternate;
     }
 
-    .site {
+    .current--mint {
+      top: -31%;
+      right: -14%;
+      width: 64%;
+      height: 68%;
+      opacity: 0.72;
+      background: radial-gradient(circle at 44% 50%, #e9fff8 0%, #bcecdf 38%, #75a6ff 74%, transparent 100%);
+      animation: mint-current 17s ease-in-out infinite alternate;
+    }
+
+    @keyframes field-drift {
+      from { transform: rotate(-3deg) scale(1); }
+      to { transform: rotate(4deg) scale(1.08) translate3d(1.5%, -1%, 0); }
+    }
+
+    @keyframes cobalt-current {
+      from { transform: rotate(-10deg) translate3d(-2%, 3%, 0); }
+      to { transform: rotate(-4deg) translate3d(8%, -5%, 0) scale(1.08); }
+    }
+
+    @keyframes mint-current {
+      from { transform: rotate(14deg) translate3d(0, 0, 0); }
+      to { transform: rotate(4deg) translate3d(-11%, 9%, 0) scale(1.12); }
+    }
+
+    .glass {
       position: relative;
       z-index: 1;
-      min-height: 100vh;
-      padding: clamp(2rem, 6vw, 5rem);
-    }
-
-    .home {
-      width: min(860px, calc(100vw - clamp(4rem, 12vw, 10rem)));
-      max-width: calc(100vw - var(--terminal-dock-width) - clamp(7rem, 12vw, 12rem));
-      opacity: 0;
-      transform: translateY(14px);
-      transition:
-        opacity 900ms ease 760ms,
-        transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 760ms;
-      pointer-events: none;
-    }
-
-    .home.is-visible,
-    .is-revealed .home {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .identity {
-      margin: 0 0 2rem;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 400;
-      letter-spacing: 0;
-      line-height: 1;
-    }
-
-    .intro-copy {
-      max-width: 48rem;
-      margin: 0 0 2.4rem;
-      color: #d6d6d6;
-      font-size: clamp(1rem, 1.4vw, 1.2rem);
-    }
-
-    .home-section {
-      margin: 0 0 1.9rem;
-    }
-
-    .section-kicker {
-      margin: 0 0 0.55rem;
-      color: var(--quiet);
-      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
-      font-size: 0.84rem;
-      letter-spacing: 0;
-      text-transform: lowercase;
-    }
-
-    .home-list {
-      display: grid;
-      gap: 0.55rem;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: clamp(1.1rem, 2vw, 1.55rem);
-    }
-
-    .home-list li {
-      display: grid;
-      grid-template-columns: 5rem minmax(0, 1fr);
-      align-items: baseline;
-      column-gap: 0.7rem;
-    }
-
-    .list-type {
-      color: #dcdcdc;
-      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
-      font-size: 0.9em;
-      white-space: nowrap;
-    }
-
-    .home-list a,
-    .list-copy {
-      width: fit-content;
-      max-width: 100%;
-      overflow-wrap: anywhere;
-    }
-
-    .list-copy {
-      color: #e4e4e4;
-    }
-
-    .list-quote {
-      grid-column: 2;
-      max-width: 38rem;
-      margin: 0.15rem 0 0;
-      color: var(--muted);
-      font-size: 0.72em;
-      line-height: 1.45;
-    }
-
-    .socials {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1.2rem;
-      margin-top: 1.5rem;
-      color: #e2e2e2;
-      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
-      font-size: 0.95rem;
-    }
-
-    .email-reveal {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .email-trigger {
-      appearance: none;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
-      text-decoration-line: underline;
-      text-decoration-color: currentColor;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.18em;
-    }
-
-    .email-trigger:hover,
-    .email-trigger:focus-visible {
-      color: #ffffff;
-      outline: none;
-    }
-
-    .email-box {
-      position: absolute;
-      top: calc(100% + 0.48rem);
-      left: 0;
-      z-index: 4;
-      width: max-content;
-      max-width: calc(100vw - 2rem);
-      padding: 0.32rem 0.48rem;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 6px;
-      background: rgba(17,17,17,0.96);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.34);
-      color: #eeeeee;
-      font-size: 0.86rem;
-      line-height: 1.3;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-4px) scale(0.98);
-      transform-origin: top left;
-      transition:
-        opacity 180ms ease,
-        transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .email-box.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-    }
-
-    .terminal {
-      position: fixed;
-      z-index: 2;
-      top: 50%;
-      left: 50%;
-      width: var(--terminal-width);
-      height: var(--terminal-height);
+      width: min(70rem, calc(100vw - clamp(2rem, 12vw, 10rem)));
+      min-height: min(45rem, calc(100svh - clamp(2rem, 12vw, 10rem)));
       display: flex;
       flex-direction: column;
-      background: #111111;
-      border: 1px solid #1f1f1f;
-      border-radius: 10px;
+      padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5.5vw, 4.5rem);
       overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.035),
-        0 44px 90px rgba(0,0,0,0.78),
-        0 16px 34px rgba(0,0,0,0.45);
-      font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
-      font-size: 14px;
-      line-height: 1.65;
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-      transition:
-        top 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-        left 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-        width 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-        height 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 1200ms ease,
-        transform 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 1200ms ease,
-        background 1200ms ease;
-      animation: appear 550ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      isolation: isolate;
+      border: 1px solid var(--glass-line);
+      border-radius: 1.75rem;
+      background: var(--glass);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2.25rem 5.625rem var(--shadow);
+      -webkit-backdrop-filter: blur(30px) saturate(1.12);
+      backdrop-filter: blur(30px) saturate(1.12);
+      transition: background-color 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
     }
 
-    .terminal.is-docked,
-    .is-revealed .terminal {
-      top: var(--terminal-dock-margin);
-      left: calc(100vw - var(--terminal-dock-margin) - var(--terminal-dock-width));
-      width: var(--terminal-dock-width);
-      height: var(--terminal-dock-height);
-      background: rgba(17, 17, 17, 0.58);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.02),
-        0 20px 58px rgba(0,0,0,0.52);
-      opacity: 0.52;
-      transform: translate(0, 0) scale(1);
-      backdrop-filter: blur(6px);
-      animation: none;
+    .glass::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: -7rem;
+      right: -6rem;
+      width: 32rem;
+      height: 25rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(50, 103, 242, 0.08), transparent 68%);
+      transform: translate(calc((var(--pointer-x) - 50%) * 0.08), calc((var(--pointer-y) - 50%) * 0.08));
+      transition: transform 240ms ease-out;
     }
 
-    .terminal.is-docked:hover,
-    .terminal.is-docked:focus-within,
-    .terminal.is-resizing,
-    .is-revealed .terminal:hover,
-    .is-revealed .terminal:focus-within {
-      opacity: 0.96;
-      background: rgba(17, 17, 17, 0.92);
+    .glass::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      background-image: radial-gradient(rgba(16, 19, 26, 0.36) 0.55px, transparent 0.72px);
+      background-size: 4px 4px;
+      opacity: 0.09;
+      pointer-events: none;
+      -webkit-mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 14%, rgba(0, 0, 0, 0.64) 28%, transparent 58%);
+      mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 14%, rgba(0, 0, 0, 0.64) 28%, transparent 58%);
+      transition: opacity 500ms ease;
     }
 
-    .terminal.is-resizing {
-      user-select: none;
-      transition: none;
+    .glass > * {
+      position: relative;
+      z-index: 1;
     }
 
-    @keyframes appear {
-      from { opacity: 0; transform: translate(-50%, calc(-50% + 18px)) scale(0.985); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-
-    .titlebar {
+    .topbar {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 0.7rem 1rem;
-      background: #161616;
-      border-bottom: 1px solid #202020;
-      flex-shrink: 0;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot.r { background: var(--red); }
-    .dot.y { background: var(--yellow); }
-    .dot.g { background: #28c840; }
-
-    .titlebar-label {
-      flex: 1;
-      text-align: center;
-      color: #4d4d4d;
-      font-size: 12px;
-      letter-spacing: 0.04em;
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--ink);
+      text-decoration: none;
     }
 
-    .titlebar-links {
-      display: flex;
-      gap: 0.6rem;
-      font-size: 12px;
+    .brand-mark {
+      width: 2.125rem;
+      height: 2.125rem;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      transition: background-color 500ms ease, color 500ms ease;
     }
 
-    .titlebar-links button,
-    .command-chip {
-      color: #8c8c8c;
-      background: none;
-      border: none;
-      border-radius: 0;
-      font: inherit;
-      cursor: pointer;
+    .brand-label {
+      font-size: 0.8125rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
 
-    .titlebar-links button:hover,
-    .titlebar-links button:focus-visible,
-    .command-chip:hover,
-    .command-chip:focus-visible {
-      color: #f0f0f0;
-      outline: none;
-    }
-
-    .body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.25rem 1.5rem 0.25rem;
-      scrollbar-width: thin;
-      scrollbar-color: #2a2a2a transparent;
-    }
-
-    .body::-webkit-scrollbar { width: 3px; }
-    .body::-webkit-scrollbar-track { background: transparent; }
-    .body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-
-    .line {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0 0.5rem;
-      min-height: 1.65em;
-      animation: fadeIn 200ms ease both;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .spacer { height: 0.6rem; }
-
-    .p { color: var(--green); flex-shrink: 0; user-select: none; }
-    .c { color: var(--orange); }
-    .o { color: #d4d4d4; width: 100%; }
-    .e { color: #f87171; width: 100%; }
-
-    .o a { color: #93c5fd; text-decoration: none; }
-    .o a:hover,
-    .o a:focus-visible { text-decoration: underline; }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      padding: 0.15rem 0 0.25rem;
-    }
-
-    .command-chip {
-      color: #d4d4d4;
-      border: 1px solid #2a2a2a;
-      border-radius: 999px;
-      padding: 0.18rem 0.55rem;
-      background: #151515;
-    }
-
-    .command-chip::before {
-      content: "$ ";
-      color: var(--green);
-    }
-
-    .command-chip:hover,
-    .command-chip:focus-visible {
-      border-color: #3d3d3d;
-      background: #1a1a1a;
-    }
-
-    .input-row {
+    .controls {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.5rem 1.5rem 1.25rem;
-      flex-shrink: 0;
     }
 
-    .input-ps1 { color: var(--green); user-select: none; flex-shrink: 0; }
+    .control {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--hairline);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.66);
+      cursor: pointer;
+      transition: transform 180ms ease, background-color 180ms ease, border-color 500ms ease;
+    }
 
-    .input-row input {
+    .control:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.9); }
+
+    .control:active { transform: translateY(0) scale(0.96); }
+
+    .control:focus-visible,
+    .recommendation:focus-visible,
+    .contact-link:focus-visible,
+    .brand:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .control svg { width: 1rem; height: 1rem; }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: clamp(4.75rem, 10vw, 6.375rem);
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      line-height: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(3.5rem, 7.2vw, 4.75rem);
+      font-weight: 650;
+      letter-spacing: -0.055em;
+      line-height: 1;
+    }
+
+    .intro {
+      max-width: 32rem;
+      margin: 0;
+      color: var(--copy);
+      font-size: clamp(1rem, 1.6vw, 1.125rem);
+      letter-spacing: -0.015em;
+      line-height: 1.5;
+    }
+
+    .lower {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3rem;
+      margin-top: auto;
+      padding-top: clamp(4rem, 9vw, 5.5rem);
+    }
+
+    .recommendation-wrap {
+      width: min(40.625rem, 100%);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.875rem;
+      color: var(--copy);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.1em;
+      line-height: 1rem;
+      text-transform: uppercase;
+    }
+
+    .count {
+      color: #7a8492;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .recommendation {
+      min-height: 5.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.125rem 1.25rem;
+      border: 1px solid var(--hairline);
+      border-radius: 1.125rem;
+      background: var(--glass-soft);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      text-decoration: none;
+      transition: transform 220ms ease, background-color 220ms ease, border-color 500ms ease;
+    }
+
+    .recommendation:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.76); }
+
+    .play {
+      width: 3rem;
+      height: 3rem;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      transition: background-color 500ms ease, color 500ms ease;
+    }
+
+    .play svg { width: 0.9375rem; height: 1.0625rem; transform: translateX(1px); }
+
+    .recommendation-copy {
       min-width: 0;
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      color: #d4d4d4;
-      font: inherit;
-      caret-color: #d4d4d4;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      gap: 0.25rem;
     }
 
-    .is-typing-intro .input-row {
-      visibility: hidden;
+    .recommendation-title {
+      color: var(--ink);
+      font-size: 1.0625rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.375rem;
     }
 
-    .intro-command,
-    .intro-output-line {
-      gap: 0;
+    .recommendation-note {
+      color: var(--quiet);
+      font-size: 0.8125rem;
+      line-height: 1.125rem;
     }
 
-    .intro-command .p {
-      margin-right: 0.5rem;
+    .arrow { width: 2rem; flex: 0 0 2rem; text-align: center; font-size: 1rem; }
+
+    .contacts {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .intro-line-content {
-      width: auto;
+    .contact-link {
+      height: 2.75rem;
+      min-width: 2.75rem;
+      display: grid;
+      place-items: center;
+      padding: 0 1.125rem;
+      border: 1px solid var(--hairline);
+      border-radius: 1.375rem;
+      background: var(--glass-soft);
+      color: var(--ink);
+      font-size: 0.8125rem;
+      font-weight: 650;
+      text-decoration: none;
+      transition: transform 180ms ease, background-color 180ms ease, border-color 500ms ease;
     }
 
-    .terminal-caret {
-      display: inline-block;
-      width: 0.7em;
-      height: 1.15em;
-      background: #d4d4d4;
-      opacity: 0.88;
-      animation: caretPulse 950ms steps(1) infinite;
-      flex-shrink: 0;
-      transform: translateY(0.18em);
-    }
+    .contact-link--round { width: 2.75rem; padding: 0; border-radius: 50%; }
 
-    .intro-command.is-submitted .terminal-caret,
-    .intro-output-line.is-submitted .terminal-caret {
-      display: none;
-    }
+    .contact-link:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.76); }
 
-    @keyframes caretPulse {
-      50% { opacity: 0.25; }
-    }
-
-    .resize-handle {
+    .sr-only {
       position: absolute;
-      z-index: 4;
-      display: none;
-      touch-action: none;
-    }
-
-    .terminal.is-docked .resize-handle {
-      display: block;
-    }
-
-    .resize-handle-bl {
-      left: 0;
-      bottom: 0;
-      width: 22px;
-      height: 22px;
-      cursor: nesw-resize;
-    }
-
-    .resize-handle-bl::after {
-      content: "";
-      position: absolute;
-      left: 6px;
-      bottom: 6px;
-      width: 10px;
-      height: 10px;
-      border-left: 1px solid rgba(255,255,255,0.42);
-      border-bottom: 1px solid rgba(255,255,255,0.42);
-    }
-
-    .resize-handle-b {
-      left: 22px;
-      right: 22px;
-      bottom: 0;
-      height: 16px;
-      cursor: ns-resize;
-    }
-
-    .resize-handle-b::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 6px;
-      width: 32px;
+      width: 1px;
       height: 1px;
-      background: rgba(255,255,255,0.34);
-      transform: translateX(-50%);
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
-    @media (max-width: 980px) {
-      .site {
-        padding: 1.6rem;
-      }
-
-      .home {
-        width: min(720px, 100%);
-        max-width: none;
-        padding-top: min(360px, 46vh);
-      }
-
-      .terminal.is-docked,
-      .is-revealed .terminal {
-        top: 0.8rem;
-        left: 0.8rem;
-        width: calc(100vw - 1.6rem);
-        height: min(310px, 42vh);
-      }
-
-      .resize-handle-bl {
-        display: none !important;
-      }
+    body[data-theme="night"] {
+      color-scheme: dark;
+      --ink: #f7faff;
+      --copy: #d5def0;
+      --quiet: #aebbd1;
+      --accent: #8bb0ff;
+      --snow: #080c18;
+      --glacier: #17346e;
+      --meltwater: #185c63;
+      --glass: rgba(8, 13, 27, 0.64);
+      --glass-soft: rgba(10, 18, 36, 0.5);
+      --glass-line: rgba(255, 255, 255, 0.16);
+      --hairline: rgba(255, 255, 255, 0.14);
+      --shadow: rgba(0, 0, 0, 0.42);
+      background: #070b17;
     }
 
-    @media (max-width: 560px) {
-      html { font-size: 15px; }
+    body[data-theme="night"] .control,
+    body[data-theme="night"] .recommendation,
+    body[data-theme="night"] .contact-link { background: rgba(10, 18, 36, 0.52); }
 
-      .site {
-        padding: 1rem;
-      }
+    body[data-theme="night"] .control:hover,
+    body[data-theme="night"] .recommendation:hover,
+    body[data-theme="night"] .contact-link:hover { background: rgba(24, 40, 74, 0.72); }
 
-      .home {
-        padding-top: min(330px, 45vh);
-      }
+    body[data-theme="night"] .brand-mark,
+    body[data-theme="night"] .play { background: #f7faff; color: #10131a; }
 
-      .identity {
-        font-size: 2.6rem;
-        margin-bottom: 1.5rem;
-      }
+    body.motion-paused .gradient-field::before,
+    body.motion-paused .current { animation-play-state: paused; }
 
-      .intro-copy {
-        margin-bottom: 1.6rem;
-      }
+    body.motion-paused .gradient-field::after { opacity: 0.08; }
 
-      .home-list {
-        gap: 0.75rem;
-        font-size: 1.15rem;
-      }
+    body.motion-paused .glass::after { opacity: 0.035; }
 
-      .home-list li {
-        grid-template-columns: 4.2rem minmax(0, 1fr);
-      }
+    @media (max-width: 64rem) {
+      .glass { width: min(100%, 52rem); min-height: min(45rem, calc(100svh - 2rem)); }
+      .lower { align-items: stretch; flex-direction: column; gap: 1.5rem; }
+      .recommendation-wrap { width: 100%; }
+      .contacts { align-self: flex-end; }
+    }
 
-      .terminal {
-        width: calc(100vw - 1rem);
-        height: min(500px, calc(100vh - 2rem));
-        font-size: 13px;
-      }
-
-      .terminal.is-docked,
-      .is-revealed .terminal {
-        top: 0.5rem;
-        left: 0.5rem;
-        width: calc(100vw - 1rem);
-        height: min(290px, 42vh);
-        opacity: 0.68;
-      }
-
-      .titlebar {
-        padding: 0.65rem 0.8rem;
-      }
-
-      .titlebar-label {
-        display: none;
-      }
-
-      .titlebar-links {
-        margin-left: auto;
-      }
-
-      .body {
-        padding: 1rem 1rem 0.25rem;
-      }
-
-      .input-row {
-        padding: 0.5rem 1rem 1rem;
-      }
-
-      .resize-handle-bl {
-        display: none !important;
-      }
+    @media (max-width: 40rem) {
+      body { place-items: start center; padding: 1rem; }
+      .glass { min-height: calc(100svh - 2rem); border-radius: 1.5rem; }
+      .brand-label { display: none; }
+      .hero { padding-top: 4.75rem; }
+      h1 { font-size: clamp(3.25rem, 17vw, 4rem); }
+      .lower { padding-top: 4.5rem; }
+      .recommendation { align-items: flex-start; gap: 0.875rem; padding: 1rem; }
+      .play { width: 2.5rem; height: 2.5rem; }
+      .recommendation-note { font-size: 0.75rem; }
+      .arrow { width: 1.25rem; flex-basis: 1.25rem; }
+      .contacts { align-self: flex-start; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 1ms !important;
+      *, *::before, *::after {
         scroll-behavior: auto !important;
-        transition-duration: 1ms !important;
-        transition-delay: 0ms !important;
-      }
-
-      .terminal-caret {
-        animation: none !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
       }
     }
   </style>
 </head>
 <body>
-  <canvas class="terminal-ripple-canvas" id="terminal-ripple-canvas" aria-hidden="true"></canvas>
+  <div class="gradient-field" aria-hidden="true">
+    <div class="current current--cobalt"></div>
+    <div class="current current--mint"></div>
+  </div>
 
-  <main class="site" aria-label="Evan Rose homepage">
-    <section class="home" aria-labelledby="name">
-      <h1 class="identity" id="name">Evan Rose</h1>
-      <p class="intro-copy">
-        I build software, think about general purpose robotics, document my projects, and keep
-        track of ambitious technology worth understanding.
-      </p>
+  <main class="glass" aria-labelledby="name">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Evan Rose home">
+        <span class="brand-mark" aria-hidden="true">ER</span>
+        <span class="brand-label">evanrose.com</span>
+      </a>
 
-      <section class="home-section" aria-labelledby="projects-heading">
-        <h2 class="section-kicker" id="projects-heading">projects</h2>
-        <ol class="home-list" aria-label="Projects">
-          <li>
-            <span class="list-type">active</span>
-            <a href="projects/#personal-site">Personal website</a>
-            <p class="list-quote">A project journal about designing and building this corner of the internet.</p>
-          </li>
-        </ol>
-      </section>
+      <div class="controls" aria-label="Page controls">
+        <button class="control" id="motion-toggle" type="button" aria-label="Pause background motion" aria-pressed="false" title="Pause background motion">
+          <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M7 4v16M17 4v16"/></svg>
+          <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        </button>
+        <button class="control" id="theme-toggle" type="button" aria-label="Switch to night theme" aria-pressed="false" title="Switch to night theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></svg>
+        </button>
+      </div>
+    </header>
 
-      <section class="home-section" aria-labelledby="recommendations-heading">
-        <h2 class="section-kicker" id="recommendations-heading">recommendations</h2>
-        <ol class="home-list" aria-label="Recommendations">
-          <li>
-            <span class="list-type">watch</span>
-            <span>
-              <a href="https://www.youtube.com/watch?v=0HqUYpGQIfs" target="_blank" rel="noopener">Emergent Complexity</a>
-            </span>
-            <blockquote class="list-quote">"If you wish to make an apple pie from scratch, you must first invent the universe."</blockquote>
-          </li>
-        </ol>
-      </section>
-
-      <nav class="socials" aria-label="Links">
-        <span class="email-reveal">
-          <button class="email-trigger" type="button" aria-expanded="false" aria-controls="email-box">email</button>
-          <span class="email-box" id="email-box" role="status">[first name]rose@ucla.edu</span>
-        </span>
-        <a href="https://x.com/evanr0se" target="_blank" rel="noopener">x</a>
-        <a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin</a>
-      </nav>
+    <section class="hero">
+      <p class="eyebrow">Personal index · 2026</p>
+      <h1 id="name">Evan Rose</h1>
+      <p class="intro">A few things worth keeping close, plus a simple way to say hello.</p>
     </section>
+
+    <div class="lower">
+      <section class="recommendation-wrap" aria-labelledby="recommendations-heading">
+        <div class="section-label">
+          <span id="recommendations-heading">Recommendation</span>
+          <span class="count">01 / 01</span>
+        </div>
+        <a class="recommendation" href="https://www.youtube.com/watch?v=0HqUYpGQIfs" target="_blank" rel="noopener noreferrer">
+          <span class="play" aria-hidden="true">
+            <svg viewBox="0 0 15 17" fill="none"><path d="M14 8.5 1 16V1l13 7.5Z" fill="currentColor"/></svg>
+          </span>
+          <span class="recommendation-copy">
+            <span class="recommendation-title">Emergent Complexity</span>
+            <span class="recommendation-note">“To make an apple pie from scratch, invent the universe.”</span>
+          </span>
+          <span class="arrow" aria-hidden="true">↗</span>
+          <span class="sr-only">Opens on YouTube in a new tab</span>
+        </a>
+      </section>
+
+      <nav class="contacts" aria-label="Contact and social links">
+        <a class="contact-link" href="mailto:evanrose@ucla.edu">email</a>
+        <a class="contact-link contact-link--round" href="https://x.com/evanr0se" target="_blank" rel="noopener noreferrer" aria-label="Evan Rose on X">X</a>
+        <a class="contact-link contact-link--round" href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener noreferrer" aria-label="Evan Rose on LinkedIn">in</a>
+      </nav>
+    </div>
   </main>
 
-  <aside class="terminal" aria-label="interactive terminal">
-    <div class="titlebar">
-      <span class="dot r"></span>
-      <span class="dot y"></span>
-      <span class="dot g"></span>
-      <span class="titlebar-label">evan@rose - ~</span>
-      <span class="titlebar-links" aria-label="quick commands">
-        <button type="button" data-cmd="about">about</button>
-        <button type="button" data-cmd="projects">projects</button>
-        <button type="button" data-cmd="recs">recs</button>
-        <button type="button" data-cmd="contact">contact</button>
-      </span>
-    </div>
-    <div class="body" id="body">
-      <div id="output"></div>
-    </div>
-    <div class="input-row">
-      <span class="input-ps1">evan@rose:~$</span>
-      <input id="input" type="text" autocomplete="off" spellcheck="false" autofocus>
-    </div>
-    <div class="resize-handle resize-handle-bl" aria-hidden="true"></div>
-    <div class="resize-handle resize-handle-b" aria-hidden="true"></div>
-  </aside>
-
   <script>
-  (function () {
-    const terminal = document.querySelector('.terminal');
-    const rippleCanvas = document.getElementById('terminal-ripple-canvas');
-    const rippleContext = rippleCanvas && rippleCanvas.getContext ? rippleCanvas.getContext('2d') : null;
-    const home = document.querySelector('.home');
-    const emailTrigger = document.querySelector('.email-trigger');
-    const emailBox = document.getElementById('email-box');
-    const out = document.getElementById('output');
-    const input = document.getElementById('input');
-    const body = document.getElementById('body');
-    const resizeHandles = Array.from(document.querySelectorAll('.resize-handle'));
-    const PS1 = 'evan@rose:~$';
-    const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
-    const INTRO_SKIP_STORAGE_KEY = 'evanrose:intro-seen-until';
-    const INTRO_SKIP_DURATION = 5 * 60 * 1000;
-    const INTRO_TIMING = {
-      startDelay: 950,
-      commandKeyMin: 120,
-      commandKeyMax: 210,
-      eraseKeyMin: 35,
-      eraseKeyMax: 75,
-      afterGreeting: 460,
-      afterErase: 180,
-      afterCommand: 520,
-      lineHold: 170,
-      afterOutput: 3000,
-      dockDuration: 4200
-    };
-    const DESKTOP_DOCK_WIDTH_MAX = 780;
-    const DESKTOP_DOCK_WIDTH_RATIO = 0.38;
-    const DESKTOP_DOCK_HEIGHT_MAX = 920;
-    let revealed = false;
-    let dockSizeOverride = null;
-    let activeResize = null;
-    let resizeFrame = 0;
-    let rippleFrame = 0;
+    (() => {
+      const root = document.documentElement;
+      const body = document.body;
+      const motionButton = document.getElementById('motion-toggle');
+      const themeButton = document.getElementById('theme-toggle');
+      const pauseIcon = motionButton.querySelector('.pause-icon');
+      const playIcon = motionButton.querySelector('.play-icon');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const storedTheme = localStorage.getItem('evanrose:theme');
+      let frame = 0;
 
-    function readIntroSkipExpiry() {
-      try {
-        return Number(localStorage.getItem(INTRO_SKIP_STORAGE_KEY)) || 0;
-      } catch {
-        return 0;
-      }
-    }
-
-    function clearIntroSkipExpiry() {
-      try {
-        localStorage.removeItem(INTRO_SKIP_STORAGE_KEY);
-      } catch {}
-    }
-
-    function shouldSkipStartupIntro() {
-      const expiresAt = readIntroSkipExpiry();
-      if (!expiresAt) return false;
-      if (expiresAt > Date.now()) return true;
-      clearIntroSkipExpiry();
-      return false;
-    }
-
-    function markStartupIntroSeen() {
-      try {
-        localStorage.setItem(INTRO_SKIP_STORAGE_KEY, String(Date.now() + INTRO_SKIP_DURATION));
-      } catch {}
-    }
-
-    function revealSite() {
-      if (revealed) return;
-      revealed = true;
-      animateReveal();
-    }
-
-    function setEmailBoxVisible(isVisible) {
-      if (!emailTrigger || !emailBox) return;
-      emailTrigger.setAttribute('aria-expanded', String(isVisible));
-      emailBox.classList.toggle('is-visible', isVisible);
-    }
-
-    function toggleEmailBox() {
-      if (!emailTrigger) return;
-      setEmailBoxVisible(emailTrigger.getAttribute('aria-expanded') !== 'true');
-    }
-
-    function prefersReducedMotion() {
-      return motionQuery.matches;
-    }
-
-    function setStartupIntroActive(isActive) {
-      document.body.classList.toggle('is-typing-intro', isActive);
-      input.readOnly = isActive;
-    }
-
-    function resizeRippleCanvas() {
-      if (!rippleContext) return null;
-
-      const width = Math.max(1, Math.ceil(window.innerWidth || document.documentElement.clientWidth || 1));
-      const height = Math.max(1, Math.ceil(window.innerHeight || document.documentElement.clientHeight || 1));
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      const scaledWidth = Math.ceil(width * ratio);
-      const scaledHeight = Math.ceil(height * ratio);
-
-      if (rippleCanvas.width !== scaledWidth || rippleCanvas.height !== scaledHeight) {
-        rippleCanvas.width = scaledWidth;
-        rippleCanvas.height = scaledHeight;
-        rippleCanvas.style.width = `${width}px`;
-        rippleCanvas.style.height = `${height}px`;
+      function setTheme(theme) {
+        const isNight = theme === 'night';
+        body.dataset.theme = isNight ? 'night' : 'day';
+        themeButton.setAttribute('aria-pressed', String(isNight));
+        themeButton.setAttribute('aria-label', isNight ? 'Switch to day theme' : 'Switch to night theme');
+        themeButton.title = isNight ? 'Switch to day theme' : 'Switch to night theme';
+        document.querySelector('meta[name="theme-color"]').content = isNight ? '#070b17' : '#dbe9ff';
       }
 
-      rippleContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-      return { width, height };
-    }
-
-    function distanceFromTerminalEdge(x, y, rect) {
-      const dx = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
-      const dy = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
-      return Math.hypot(dx, dy);
-    }
-
-    function fract(value) {
-      return value - Math.floor(value);
-    }
-
-    function glitchNoise(x, y, tick) {
-      return fract(Math.sin(x * 12.9898 + y * 78.233 + tick * 19.19) * 43758.5453);
-    }
-
-    function drawTerminalRipple(now) {
-      const size = resizeRippleCanvas();
-      if (!size) return;
-
-      const { width, height } = size;
-      const rect = terminal.getBoundingClientRect();
-      const pixel = width <= 560 ? 4 : 5;
-      const reach = Math.min(42, Math.max(24, Math.min(rect.width, rect.height) * 0.105));
-      const tick = prefersReducedMotion() ? 0 : Math.floor(now / 900);
-      const minX = Math.max(0, Math.floor((rect.left - reach) / pixel) * pixel);
-      const maxX = Math.min(width, Math.ceil((rect.right + reach) / pixel) * pixel);
-      const minY = Math.max(0, Math.floor((rect.top - reach) / pixel) * pixel);
-      const maxY = Math.min(height, Math.ceil((rect.bottom + reach) / pixel) * pixel);
-
-      rippleContext.clearRect(0, 0, width, height);
-
-      for (let y = minY; y < maxY; y += pixel) {
-        for (let x = minX; x < maxX; x += pixel) {
-          const cx = x + pixel / 2;
-          const cy = y + pixel / 2;
-          const isInsideTerminal =
-            cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom;
-
-          if (isInsideTerminal) continue;
-
-          const distance = distanceFromTerminalEdge(cx, cy, rect);
-          if (distance > reach) continue;
-
-          const cellX = Math.floor(x / pixel);
-          const cellY = Math.floor(y / pixel);
-          const band = Math.floor(distance / (pixel * 1.55));
-          const brokenEdge = glitchNoise(cellX, cellY, tick);
-          const shimmer = glitchNoise(cellY, cellX, tick + band);
-          const isFineBand = band === 0 || (band === 2 && brokenEdge > 0.56) || (band === 4 && brokenEdge > 0.82);
-
-          if (!isFineBand || shimmer < 0.34) continue;
-
-          const fade = Math.pow(1 - distance / reach, 2.5);
-          const edgeLift = band === 0 ? 0.028 : 0.014;
-          const alpha = fade * (edgeLift + shimmer * 0.034);
-
-          if (alpha < 0.012) continue;
-
-          rippleContext.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-          rippleContext.fillRect(x, y, Math.max(1, pixel - 2), Math.max(1, pixel - 2));
-        }
-      }
-    }
-
-    function renderTerminalRipple(now) {
-      drawTerminalRipple(now || 0);
-      if (!prefersReducedMotion()) {
-        rippleFrame = setTimeout(() => {
-          requestAnimationFrame(renderTerminalRipple);
-        }, 260);
-      }
-    }
-
-    function startTerminalRipple() {
-      if (!rippleContext || rippleFrame) return;
-      drawTerminalRipple(0);
-
-      if (!prefersReducedMotion()) {
-        rippleFrame = requestAnimationFrame(renderTerminalRipple);
-      }
-    }
-
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, prefersReducedMotion() ? 0 : ms));
-    }
-
-    function randomBetween(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function clamp(value, min, max) {
-      return Math.min(Math.max(value, min), max);
-    }
-
-    function easeInOutCubic(t) {
-      return t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function getDockMargin() {
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      if (matchMedia('(max-width: 560px)').matches) return 0.5 * rem;
-      if (matchMedia('(max-width: 980px)').matches) return 0.8 * rem;
-      return Math.min(Math.max(window.innerWidth * 0.04, rem), 3 * rem);
-    }
-
-    function getDockConstraints() {
-      const margin = getDockMargin();
-      const maxWidth = Math.max(220, window.innerWidth - margin * 2);
-      const maxHeight = Math.max(180, window.innerHeight - margin * 2);
-      return {
-        margin,
-        maxWidth,
-        maxHeight,
-        minWidth: Math.min(300, maxWidth),
-        minHeight: Math.min(180, maxHeight),
-        isNarrow: matchMedia('(max-width: 560px)').matches,
-        isTablet: matchMedia('(max-width: 980px)').matches
-      };
-    }
-
-    function getDockTarget() {
-      const constraints = getDockConstraints();
-      const { margin, isNarrow, isTablet } = constraints;
-      let target;
-
-      if (isNarrow) {
-        target = {
-          top: margin,
-          left: margin,
-          width: window.innerWidth - margin * 2,
-          height: Math.min(290, window.innerHeight * 0.42),
-          opacity: 0.68
-        };
-      } else if (isTablet) {
-        target = {
-          top: margin,
-          left: margin,
-          width: window.innerWidth - margin * 2,
-          height: Math.min(310, window.innerHeight * 0.42),
-          opacity: 0.58
-        };
-      } else {
-        const width = Math.min(
-          DESKTOP_DOCK_WIDTH_MAX,
-          window.innerWidth * DESKTOP_DOCK_WIDTH_RATIO,
-          constraints.maxWidth
-        );
-        target = {
-          top: margin,
-          left: window.innerWidth - margin - width,
-          width,
-          height: Math.min(DESKTOP_DOCK_HEIGHT_MAX, constraints.maxHeight),
-          opacity: 0.52
-        };
+      function setMotionPaused(paused) {
+        body.classList.toggle('motion-paused', paused);
+        motionButton.setAttribute('aria-pressed', String(paused));
+        motionButton.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+        motionButton.title = paused ? 'Play background motion' : 'Pause background motion';
+        pauseIcon.hidden = paused;
+        playIcon.hidden = !paused;
       }
 
-      if (dockSizeOverride && revealed) {
-        target.height = clamp(dockSizeOverride.height || target.height, constraints.minHeight, constraints.maxHeight);
-
-        if (isTablet || isNarrow) {
-          target.left = margin;
-          target.width = window.innerWidth - margin * 2;
-        } else {
-          const right = window.innerWidth - margin;
-          target.width = clamp(dockSizeOverride.width || target.width, constraints.minWidth, constraints.maxWidth);
-          target.left = right - target.width;
-        }
-      }
-
-      return target;
-    }
-
-    function revealSiteImmediately() {
-      if (revealed) return;
-      revealed = true;
-
-      document.body.classList.add('is-revealed');
-      home.classList.add('is-visible');
-      terminal.classList.add('is-docked');
-      body.scrollTop = 0;
-
-      terminal.style.animation = 'none';
-      terminal.style.transition = 'none';
-      terminal.style.transform = 'translate(0, 0) scale(1)';
-      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
-
-      home.style.transition = 'none';
-      home.style.opacity = '1';
-      home.style.transform = 'translateY(0)';
-      home.style.pointerEvents = 'auto';
-
-      applyDockRect(getDockTarget());
-      setStartupIntroActive(false);
-    }
-
-    function applyDockRect(rect) {
-      terminal.style.top = `${rect.top}px`;
-      terminal.style.left = `${rect.left}px`;
-      terminal.style.width = `${rect.width}px`;
-      terminal.style.height = `${rect.height}px`;
-      terminal.style.opacity = `${rect.opacity}`;
-      updateHomeOffset(rect);
-      drawTerminalRipple(performance.now ? performance.now() : 0);
-    }
-
-    function updateHomeOffset(rect) {
-      const constraints = getDockConstraints();
-      if (!revealed || (!constraints.isTablet && !constraints.isNarrow)) {
-        home.style.paddingTop = '';
-        return;
-      }
-
-      const baseOffset = constraints.isNarrow
-        ? Math.min(330, window.innerHeight * 0.45)
-        : Math.min(360, window.innerHeight * 0.46);
-      const terminalOffset = rect.top + rect.height + 28;
-      home.style.paddingTop = `${Math.max(baseOffset, terminalOffset)}px`;
-    }
-
-    function animateReveal() {
-      const start = terminal.getBoundingClientRect();
-      const target = getDockTarget();
-      const duration = prefersReducedMotion() ? 1 : INTRO_TIMING.dockDuration;
-
-      document.body.classList.add('is-revealed');
-      home.classList.add('is-visible');
-      terminal.classList.add('is-docked');
-      body.scrollTop = 0;
-
-      terminal.style.animation = 'none';
-      terminal.style.transition = 'none';
-      terminal.style.top = `${start.top}px`;
-      terminal.style.left = `${start.left}px`;
-      terminal.style.width = `${start.width}px`;
-      terminal.style.height = `${start.height}px`;
-      terminal.style.transform = 'translate(0, 0) scale(1)';
-      terminal.style.opacity = '1';
-
-      home.style.transition = 'none';
-      home.style.opacity = '0';
-      home.style.transform = 'translateY(14px)';
-      home.style.pointerEvents = 'auto';
-
-      const startedAt = performance.now();
-      function frame(now) {
-        const progress = Math.min((now - startedAt) / duration, 1);
-        const eased = easeInOutCubic(progress);
-        const revealProgress = Math.max(0, (progress - 0.38) / 0.62);
-
-        terminal.style.top = `${start.top + (target.top - start.top) * eased}px`;
-        terminal.style.left = `${start.left + (target.left - start.left) * eased}px`;
-        terminal.style.width = `${start.width + (target.width - start.width) * eased}px`;
-        terminal.style.height = `${start.height + (target.height - start.height) * eased}px`;
-        terminal.style.opacity = `${1 + (target.opacity - 1) * eased}`;
-        terminal.style.background = `rgba(17, 17, 17, ${0.94 + (0.58 - 0.94) * eased})`;
-        terminal.style.boxShadow = `0 0 0 1px rgba(255,255,255,0.02), 0 ${44 + (20 - 44) * eased}px ${90 + (58 - 90) * eased}px rgba(0,0,0,${0.78 + (0.52 - 0.78) * eased})`;
-        updateHomeOffset({
-          top: start.top + (target.top - start.top) * eased,
-          height: start.height + (target.height - start.height) * eased
+      function updatePointer(event) {
+        if (reduceMotion.matches) return;
+        const x = (event.clientX / window.innerWidth) * 100;
+        const y = (event.clientY / window.innerHeight) * 100;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          root.style.setProperty('--pointer-x', `${x.toFixed(2)}%`);
+          root.style.setProperty('--pointer-y', `${y.toFixed(2)}%`);
         });
-
-        home.style.opacity = `${revealProgress}`;
-        home.style.transform = `translateY(${14 * (1 - revealProgress)}px)`;
-
-        if (progress < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          applyDockRect(target);
-          terminal.style.background = 'rgba(17, 17, 17, 0.58)';
-          home.style.opacity = '1';
-          home.style.transform = 'translateY(0)';
-          setStartupIntroActive(false);
-        }
       }
 
-      requestAnimationFrame(frame);
-    }
+      setTheme(storedTheme === 'night' ? 'night' : 'day');
+      setMotionPaused(reduceMotion.matches);
 
-    function setDockSize(width, height) {
-      const constraints = getDockConstraints();
-      dockSizeOverride = {
-        width: clamp(width, constraints.minWidth, constraints.maxWidth),
-        height: clamp(height, constraints.minHeight, constraints.maxHeight)
-      };
-      const target = getDockTarget();
-      applyDockRect(target);
-      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
-    }
-
-    function resizeDockedTerminal(clientX, clientY) {
-      if (!activeResize) return;
-
-      const constraints = getDockConstraints();
-      const dx = clientX - activeResize.startX;
-      const dy = clientY - activeResize.startY;
-      let width = activeResize.startWidth;
-      let height = clamp(activeResize.startHeight + dy, constraints.minHeight, constraints.maxHeight);
-      let left = activeResize.startLeft;
-
-      if (activeResize.edge === 'bl' && !constraints.isTablet && !constraints.isNarrow) {
-        width = clamp(activeResize.startWidth - dx, constraints.minWidth, constraints.maxWidth);
-        left = activeResize.startRight - width;
-      }
-
-      dockSizeOverride = { width, height };
-      terminal.style.top = `${activeResize.startTop}px`;
-      terminal.style.left = `${left}px`;
-      terminal.style.width = `${width}px`;
-      terminal.style.height = `${height}px`;
-      terminal.style.opacity = '0.96';
-      terminal.style.background = 'rgba(17, 17, 17, 0.92)';
-      updateHomeOffset({ top: activeResize.startTop, height });
-      drawTerminalRipple(performance.now ? performance.now() : 0);
-    }
-
-    function startResize(e) {
-      if (!revealed || !terminal.classList.contains('is-docked')) return;
-
-      const rect = terminal.getBoundingClientRect();
-      activeResize = {
-        edge: e.currentTarget.classList.contains('resize-handle-bl') ? 'bl' : 'b',
-        startX: e.clientX,
-        startY: e.clientY,
-        startTop: rect.top,
-        startLeft: rect.left,
-        startRight: rect.right,
-        startWidth: rect.width,
-        startHeight: rect.height
-      };
-
-      terminal.classList.add('is-resizing');
-      terminal.style.opacity = '0.96';
-      terminal.style.background = 'rgba(17, 17, 17, 0.92)';
-      if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
-      e.preventDefault();
-    }
-
-    function moveResize(e) {
-      if (!activeResize) return;
-      resizeDockedTerminal(e.clientX, e.clientY);
-    }
-
-    function endResize() {
-      if (!activeResize) return;
-      activeResize = null;
-      terminal.classList.remove('is-resizing');
-      const target = getDockTarget();
-      applyDockRect(target);
-      terminal.style.background = 'rgba(17, 17, 17, 0.58)';
-      input.focus();
-    }
-
-    function resizeWithKeyboard(key, shiftKey) {
-      if (!revealed || !terminal.classList.contains('is-docked')) return false;
-
-      const constraints = getDockConstraints();
-      const rect = terminal.getBoundingClientRect();
-      const step = shiftKey ? 48 : 24;
-      let width = rect.width;
-      let height = rect.height;
-
-      if (key === 'ArrowUp') height -= step;
-      if (key === 'ArrowDown') height += step;
-      if (!constraints.isTablet && !constraints.isNarrow) {
-        if (key === 'ArrowLeft') width += step;
-        if (key === 'ArrowRight') width -= step;
-      }
-
-      setDockSize(width, height);
-      return true;
-    }
-
-    function scheduleDockReapply() {
-      if (!revealed || !terminal.classList.contains('is-docked')) return;
-      cancelAnimationFrame(resizeFrame);
-      resizeFrame = requestAnimationFrame(() => {
-        const target = getDockTarget();
-        applyDockRect(target);
-        terminal.style.background = 'rgba(17, 17, 17, 0.58)';
+      window.addEventListener('pointermove', updatePointer, { passive: true });
+      motionButton.addEventListener('click', () => {
+        setMotionPaused(!body.classList.contains('motion-paused'));
       });
-    }
-
-    function esc(s) {
-      const d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
-    function line(prompt, cmd, content, cls) {
-      const el = document.createElement('div');
-      el.className = 'line';
-      let h = '';
-      if (prompt) h += `<span class="p">${esc(prompt)}</span>`;
-      if (cmd) h += `<span class="c">${esc(cmd)}</span>`;
-      if (content) h += `<span class="${cls || 'o'}">${content}</span>`;
-      el.innerHTML = h;
-      out.appendChild(el);
-      body.scrollTop = body.scrollHeight;
-    }
-
-    function print(html, cls) { line(null, null, html, cls); }
-    function space() {
-      const e = document.createElement('div');
-      e.className = 'spacer';
-      out.appendChild(e);
-    }
-
-    function createIntroTypingLine(prompt) {
-      const el = document.createElement('div');
-      el.className = prompt ? 'line intro-command' : 'line intro-output-line';
-
-      if (prompt) {
-        const promptEl = document.createElement('span');
-        promptEl.className = 'p';
-        promptEl.textContent = prompt;
-        el.appendChild(promptEl);
-      }
-
-      const textEl = document.createElement('span');
-      textEl.className = prompt ? 'c intro-command-text' : 'o intro-line-content';
-      textEl.textContent = '';
-
-      const caretEl = document.createElement('span');
-      caretEl.className = 'terminal-caret';
-
-      el.appendChild(textEl);
-      el.appendChild(caretEl);
-      out.appendChild(el);
-      body.scrollTop = body.scrollHeight;
-
-      return { el, textEl };
-    }
-
-    const suggestions = [
-      ['about', 'who i am'],
-      ['projects', 'build logs and project notes'],
-      ['recs', 'things i recommend'],
-      ['work', 'things i have built and worked on'],
-      ['why', 'why general purpose robotics'],
-      ['contact', 'get in touch'],
-      ['links', 'around the web']
-    ];
-
-    const projects = [
-      ['active', 'Personal website', 'projects/#personal-site']
-    ];
-
-    const recommendations = [
-      [
-        'watch',
-        'Emergent Complexity',
-        'https://www.youtube.com/watch?v=0HqUYpGQIfs',
-        'Emergent Garden',
-        'If you wish to make an apple pie from scratch, you must first invent the universe.'
-      ]
-    ];
-
-    const introAboutSteps = [
-      { kind: 'space' },
-      { text: 'who', html: '<span class="c">who</span>' },
-      {
-        text: "i'm evan rose, a builder interested in systems that make",
-        html: "i'm evan rose, a builder interested in systems that make"
-      },
-      {
-        text: 'ambitious technology easier to understand, use, and trust.',
-        html: 'ambitious technology easier to understand, use, and trust.'
-      },
-      { kind: 'space' },
-      { text: 'recently', html: '<span class="c">recently</span>' },
-      {
-        text: 'i worked on build ai this summer.',
-        html: 'i worked on <a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a> this summer.'
-      },
-      { kind: 'space' },
-      { text: 'direction', html: '<span class="c">direction</span>' },
-      {
-        text: 'i think humanity now faces one of its most important projects:',
-        html: 'i think humanity now faces one of its most important projects:'
-      },
-      {
-        text: 'general purpose robotics.',
-        html: '<span class="c">general purpose robotics.</span>'
-      }
-    ];
-
-    function commandList(items) {
-      space();
-      print('type the following commands in the terminal to learn more about me!');
-      items.forEach(([name, desc]) => {
-        print(`  <span class="c">${name}</span>${' '.repeat(Math.max(1, 10 - name.length))}${desc}`);
+      themeButton.addEventListener('click', () => {
+        const nextTheme = body.dataset.theme === 'night' ? 'day' : 'night';
+        setTheme(nextTheme);
+        localStorage.setItem('evanrose:theme', nextTheme);
       });
-      space();
-    }
-
-    function chips(items) {
-      const el = document.createElement('div');
-      el.className = 'chips';
-      items.forEach(([name]) => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'command-chip';
-        b.dataset.cmd = name;
-        b.textContent = name;
-        el.appendChild(b);
-      });
-      out.appendChild(el);
-      body.scrollTop = body.scrollHeight;
-    }
-
-    function printRecommendations() {
-      space();
-      print('<span class="c">recommendations</span>');
-      recommendations.forEach(([type, title, href, creator, quote]) => {
-        print(`${type}  <a href="${href}" target="_blank" rel="noopener">${title}</a>${creator ? ` - ${creator}` : ''}`);
-        if (quote) print(`       "${esc(quote)}"`);
-      });
-      space();
-    }
-
-    function printProjects() {
-      space();
-      print('<span class="c">projects</span>');
-      projects.forEach(([status, title, href]) => {
-        print(`${status}  <a href="${href}">${title}</a>`);
-      });
-      print('project notes and daily build logs at <a href="projects/">/projects/</a>.');
-      space();
-    }
-
-    const cmds = {
-      help() {
-        print('commands:');
-        suggestions.forEach(([name, desc]) => {
-          print(`  <span class="c">${name}</span>${' '.repeat(Math.max(1, 10 - name.length))}${desc}`);
-        });
-        print('  <span class="c">clear</span>     clear terminal');
-        print('  <span class="c">help</span>      this message');
-        space();
-      },
-      about() {
-        space();
-        print('<span class="c">who</span>');
-        print("i'm evan rose, a builder interested in systems that make");
-        print('ambitious technology easier to understand, use, and trust.');
-        space();
-        print('<span class="c">recently</span>');
-        print('i worked on <a href="https://www.build.ai/" target="_blank" rel="noopener">build ai</a> this summer.');
-        print('i like careful implementation, deliberate product design,');
-        print('and teams that can turn hard ideas into working artifacts.');
-        space();
-        print('<span class="c">direction</span>');
-        print('i think humanity now faces one of its most important projects:');
-        print('<span class="c">general purpose robotics.</span>');
-        commandList(suggestions.slice(1, 7));
-        chips(suggestions.slice(1, 7));
-      },
-      recs() { printRecommendations(); },
-      media() { printRecommendations(); },
-      reading() { printRecommendations(); },
-      watching() { printRecommendations(); },
-      recommendations() { printRecommendations(); },
-      projects() { printProjects(); },
-      work() {
-        space();
-        print('<span class="c">work</span>');
-        print('build ai - worked on software for making AI-built apps feel');
-        print('more practical, legible, and useful to real people.');
-        space();
-        print('i care about the craft layer: interfaces, reliability,');
-        print('iteration speed, and the small details that make tools usable.');
-        space();
-        print('try <span class="c">projects</span> for build logs or <span class="c">recs</span> for things i recommend.');
-        space();
-      },
-      why() {
-        space();
-        print('<span class="c">why robotics</span>');
-        print('general purpose robotics is where software starts acting');
-        print('directly on the physical world.');
-        space();
-        print('that makes safe deployment and careful implementation');
-        print('as important as raw capability.');
-        space();
-        print('i want to help build systems that are useful, legible,');
-        print('and reliable enough to earn trust in the real world.');
-        space();
-      },
-      contact() {
-        space();
-        print('[first name]rose@ucla.edu');
-        space();
-      },
-      links() {
-        space();
-        print('<a href="https://x.com/evanr0se" target="_blank" rel="noopener">x.com/evanr0se</a>');
-        print('<a href="https://www.linkedin.com/in/evanucla/" target="_blank" rel="noopener">linkedin.com/in/evanucla</a>');
-        space();
-      },
-      clear() {
-        out.innerHTML = '';
-      },
-      resume() { cmds.work(); },
-      build() { cmds.work(); },
-      robotics() { cmds.why(); },
-      email() { cmds.contact(); },
-      twitter() { cmds.links(); },
-      x() { cmds.links(); },
-      linkedin() { cmds.links(); },
-      whoami() { print('evan rose'); },
-      date() { print(new Date().toLocaleString()); },
-      echo(args) { if (args.length) print(esc(args.join(' '))); },
-      sudo() {
-        space();
-        print('evan is not in the sudoers file.', 'e');
-        print('this incident will be reported.', 'e');
-        space();
-      },
-    };
-
-    function run(raw) {
-      const parts = raw.trim().split(/\s+/);
-      const cmd = parts[0].toLowerCase();
-      const args = parts.slice(1);
-      if (!cmd) return;
-      line(PS1, cmd + (args.length ? ' ' + args.join(' ') : ''));
-      if (cmds[cmd]) {
-        cmds[cmd](args);
-      } else {
-        space();
-        print(`command not found: <span class="c">${esc(cmd)}</span>`, 'e');
-        commandList(suggestions);
-        chips(suggestions);
-        space();
-      }
-    }
-
-    const hist = [];
-    let hi = -1;
-
-    input.addEventListener('keydown', e => {
-      if (e.altKey && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        if (resizeWithKeyboard(e.key, e.shiftKey)) {
-          e.preventDefault();
-          return;
-        }
-      }
-
-      if (e.key === 'Enter') {
-        const v = input.value;
-        input.value = '';
-        hi = -1;
-        if (v.trim()) hist.unshift(v);
-        run(v);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (hi < hist.length - 1) input.value = hist[++hi];
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        hi > 0 ? (input.value = hist[--hi]) : (hi = -1, input.value = '');
-      } else if (e.key === 'Tab') {
-        e.preventDefault();
-        const v = input.value.toLowerCase().trim();
-        if (!v) return;
-        const match = Object.keys(cmds).find(k => k.startsWith(v));
-        if (match) input.value = match;
-      }
-    });
-
-    resizeHandles.forEach(handle => {
-      handle.addEventListener('pointerdown', startResize);
-    });
-    window.addEventListener('pointermove', moveResize);
-    window.addEventListener('pointerup', endResize);
-    window.addEventListener('pointercancel', endResize);
-    window.addEventListener('resize', scheduleDockReapply);
-    window.addEventListener('resize', () => { drawTerminalRipple(0); });
-
-    document.addEventListener('click', e => {
-      const target = e.target.closest('[data-cmd]');
-      if (target) {
-        run(target.dataset.cmd);
-        input.value = '';
-        input.focus();
-        return;
-      }
-      if (terminal.contains(e.target) && !e.target.closest('a')) {
-        input.focus();
-      }
-    });
-
-    if (emailTrigger) {
-      emailTrigger.addEventListener('click', e => {
-        e.stopPropagation();
-        toggleEmailBox();
-      });
-    }
-
-    document.addEventListener('click', e => {
-      if (!emailBox || !emailTrigger) return;
-      if (emailBox.contains(e.target) || emailTrigger.contains(e.target)) return;
-      setEmailBoxVisible(false);
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        setEmailBoxVisible(false);
-      }
-    });
-
-    async function typeIntroText(textEl, text, minDelay, maxDelay) {
-      for (let i = 0; i < text.length; i += 1) {
-        textEl.textContent += text[i];
-        body.scrollTop = body.scrollHeight;
-        await wait(randomBetween(minDelay, maxDelay));
-      }
-    }
-
-    async function eraseIntroText(textEl) {
-      while (textEl.textContent.length > 0) {
-        textEl.textContent = textEl.textContent.slice(0, -1);
-        body.scrollTop = body.scrollHeight;
-        await wait(randomBetween(INTRO_TIMING.eraseKeyMin, INTRO_TIMING.eraseKeyMax));
-      }
-    }
-
-    async function typeStartupCommand(greeting, cmd) {
-      input.value = '';
-      const { el, textEl } = createIntroTypingLine(PS1);
-      await wait(180);
-
-      await typeIntroText(textEl, greeting, INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax);
-      await wait(INTRO_TIMING.afterGreeting);
-      await eraseIntroText(textEl);
-      await wait(INTRO_TIMING.afterErase);
-      await typeIntroText(textEl, cmd, INTRO_TIMING.commandKeyMin, INTRO_TIMING.commandKeyMax);
-
-      await wait(INTRO_TIMING.afterCommand);
-      el.classList.add('is-submitted');
-      input.value = '';
-    }
-
-    function introWriteDelay(text) {
-      return clamp(950 / Math.max(text.length, 1), 16, 46);
-    }
-
-    async function writeIntroLine(step) {
-      const { el, textEl } = createIntroTypingLine();
-      const delay = introWriteDelay(step.text);
-      await typeIntroText(textEl, step.text, delay, delay);
-      textEl.innerHTML = step.html;
-      el.classList.add('is-submitted');
-    }
-
-    async function printCinematicAbout() {
-      for (const step of introAboutSteps) {
-        if (step.kind === 'space') {
-          space();
-          await wait(140);
-          continue;
-        }
-
-        await writeIntroLine(step);
-        await wait(120);
-        await wait(INTRO_TIMING.lineHold);
-      }
-    }
-
-    async function playStartupIntro() {
-      setStartupIntroActive(true);
-
-      if (prefersReducedMotion()) {
-        run('about');
-        revealSite();
-        return;
-      }
-
-      await typeStartupCommand('oh hey', 'about');
-      await printCinematicAbout();
-      await wait(INTRO_TIMING.afterOutput);
-      revealSite();
-    }
-
-    function startHomepage() {
-      if (shouldSkipStartupIntro()) {
-        run('about');
-        revealSiteImmediately();
-        input.focus();
-        return;
-      }
-
-      markStartupIntroSeen();
-      setStartupIntroActive(true);
-      setTimeout(() => { playStartupIntro(); }, prefersReducedMotion() ? 0 : INTRO_TIMING.startDelay);
-    }
-
-    startTerminalRipple();
-    startHomepage();
-  })();
+      reduceMotion.addEventListener('change', event => setMotionPaused(event.matches));
+    })();
   </script>
 </body>
 </html>
