@@ -234,7 +234,6 @@
       cursor: pointer;
     }
 
-    .shader-control + .shader-control { border-left: 1px solid rgba(21, 23, 27, 0.08); }
     .shader-control:hover { background: rgba(21, 23, 27, 0.045); }
     .shader-control svg { width: 0.875rem; height: 0.875rem; }
 
@@ -283,9 +282,6 @@
         <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M7 4v16M17 4v16"/></svg>
         <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
       </button>
-      <button class="shader-control" id="texture-toggle" type="button" aria-label="Use sage shader texture" aria-pressed="false" title="Use sage shader texture">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2"/></svg>
-      </button>
     </div>
 
     <div class="content">
@@ -295,7 +291,7 @@
       </header>
 
       <section class="recommendations" aria-labelledby="recommendations-heading">
-        <h2 class="section-title" id="recommendations-heading">Recommendation</h2>
+        <h2 class="section-title" id="recommendations-heading">Recommendations</h2>
         <a class="recommendation" href="https://www.youtube.com/watch?v=0HqUYpGQIfs" target="_blank" rel="noopener noreferrer">
           <span class="recommendation-name">Emergent Complexity</span>
           <span class="recommendation-copy">Carl Sagan on complexity, emergence, and why making anything from scratch begins with a universe.</span>
@@ -414,7 +410,6 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 uniform float u_dpr;
-uniform float u_palette;
 uniform float u_scroll;
 
 float hash21(vec2 p) {
@@ -476,30 +471,15 @@ void main() {
   float dotRadius = mix(0.045, 0.38, density);
   float graphiteDot = 1.0 - smoothstep(dotRadius, dotRadius + 0.075, length(dotPoint));
 
-  float clusterCell = 34.0;
-  vec2 clusterId = floor(cssPixels / clusterCell);
-  vec2 clusterPoint = fract(cssPixels / clusterCell) - 0.5;
-  clusterPoint += (vec2(hash21(clusterId), hash21(clusterId + 8.7)) - 0.5) * 0.12;
-  float clusterField = smoothstep(0.34, 0.67, field + sweep * 0.22);
-  float cluster = 1.0 - smoothstep(0.08, 0.23, length(clusterPoint) + (1.0 - clusterField) * 0.26);
-  float dust = 1.0 - smoothstep(0.20, 0.47, length(fract(cssPixels / 5.2) - 0.5));
-  cluster = max(cluster, dust * clusterField * 0.32);
-
-  float particle = mix(graphiteDot, cluster, u_palette);
-  float alpha = mix(
-    graphiteDot * (0.07 + density * 0.70),
-    cluster * (0.12 + clusterField * 0.58),
-    u_palette
-  );
+  float particle = graphiteDot;
+  float alpha = graphiteDot * (0.07 + density * 0.70);
 
   float edgeFade = smoothstep(0.0, 0.06, uv.x) * smoothstep(0.0, 0.06, uv.y);
   edgeFade *= smoothstep(0.0, 0.06, 1.0 - uv.x) * smoothstep(0.0, 0.06, 1.0 - uv.y);
   alpha *= edgeFade;
 
   vec3 graphite = vec3(0.10, 0.12, 0.15);
-  vec3 sage = vec3(0.34, 0.51, 0.22);
-  vec3 ink = mix(graphite, sage, u_palette);
-  outColor = vec4(ink * particle, alpha);
+  outColor = vec4(graphite * particle, alpha);
 }
   </script>
 
@@ -644,7 +624,6 @@ void main() {
       const identity = document.querySelector('.identity');
       const nameLabel = document.getElementById('name');
       const motionButton = document.getElementById('motion-toggle');
-      const textureButton = document.getElementById('texture-toggle');
       const pauseIcon = motionButton.querySelector('.pause-icon');
       const playIcon = motionButton.querySelector('.play-icon');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -685,7 +664,7 @@ void main() {
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
 
         const uniforms = {};
-        ['u_resolution', 'u_mouse', 'u_time', 'u_dpr', 'u_palette', 'u_scroll'].forEach(name => {
+        ['u_resolution', 'u_mouse', 'u_time', 'u_dpr', 'u_scroll'].forEach(name => {
           uniforms[name] = gl.getUniformLocation(program, name);
         });
 
@@ -710,7 +689,6 @@ void main() {
           if (uniforms.u_mouse) gl.uniform2f(uniforms.u_mouse, state.mouseX, state.mouseY);
           if (uniforms.u_time) gl.uniform1f(uniforms.u_time, state.time);
           if (uniforms.u_dpr) gl.uniform1f(uniforms.u_dpr, dpr);
-          if (uniforms.u_palette) gl.uniform1f(uniforms.u_palette, state.palette);
           if (uniforms.u_scroll) gl.uniform1f(uniforms.u_scroll, window.scrollY * 0.002);
           gl.drawArrays(gl.TRIANGLES, 0, 3);
         }
@@ -949,7 +927,6 @@ void main() {
 
       const state = {
         time: 0,
-        palette: 0,
         paused: reduceMotion.matches,
         mouseX: 0.68,
         mouseY: 0.62,
@@ -968,14 +945,6 @@ void main() {
         playIcon.hidden = !paused;
       }
 
-      function setPalette(palette) {
-        state.palette = palette;
-        const sage = palette === 1;
-        textureButton.setAttribute('aria-pressed', String(sage));
-        textureButton.setAttribute('aria-label', sage ? 'Use graphite shader texture' : 'Use sage shader texture');
-        textureButton.title = sage ? 'Use graphite shader texture' : 'Use sage shader texture';
-      }
-
       function updatePointer(event) {
         state.targetX = Math.max(0, Math.min(1, event.clientX / window.innerWidth));
         state.targetY = Math.max(0, Math.min(1, 1 - event.clientY / window.innerHeight));
@@ -986,11 +955,9 @@ void main() {
       }
 
       motionButton.addEventListener('click', () => setPaused(!state.paused));
-      textureButton.addEventListener('click', () => setPalette(state.palette === 0 ? 1 : 0));
       window.addEventListener('pointermove', updatePointer, { passive: true });
       reduceMotion.addEventListener('change', event => setPaused(event.matches));
       setPaused(state.paused);
-      setPalette(0);
 
       let last = performance.now();
       function frame(now) {
@@ -1004,7 +971,6 @@ void main() {
 
         if (liquid) liquid.draw({
           time: state.time,
-          palette: state.palette,
           mouseX: state.targetX,
           mouseY: state.targetY
         });

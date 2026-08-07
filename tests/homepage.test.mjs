@@ -36,6 +36,7 @@ test('keeps text legible beneath the moving dither texture', () => {
 });
 
 test('keeps the recommendation and contact destinations available', () => {
+  assert.match(html, /id="recommendations-heading">Recommendations<\/h2>/);
   assert.match(html, /Emergent Complexity/);
   assert.match(html, /youtube\.com\/watch\?v=0HqUYpGQIfs/);
   assert.match(html, /href="mailto:evanrose@ucla\.edu"/);
@@ -43,9 +44,9 @@ test('keeps the recommendation and contact destinations available', () => {
   assert.match(html, /href="https:\/\/www\.linkedin\.com\/in\/evanucla\/"/);
 });
 
-test('provides accessible shader controls and reduced-motion behavior', () => {
+test('provides an accessible motion control without a theme switch', () => {
   assert.match(html, /id="motion-toggle"[^>]+aria-label="Pause shader motion"/);
-  assert.match(html, /id="texture-toggle"[^>]+aria-label="Use sage shader texture"/);
+  assert.doesNotMatch(html, /id="texture-toggle"|u_palette|setPalette/);
   assert.match(html, /prefers-reduced-motion: reduce/);
   assert.match(html, /reduceMotion\.matches/);
 });
