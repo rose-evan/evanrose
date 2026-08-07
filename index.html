@@ -98,7 +98,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      opacity: 0.43;
+      opacity: 0.36;
       pointer-events: none;
       mix-blend-mode: multiply;
     }
@@ -112,10 +112,32 @@
       flex-direction: column;
       margin: 0 auto;
       padding: clamp(3rem, 7.8vh, 4.375rem) 0;
+      text-shadow:
+        0 0 0.45rem rgba(249, 250, 247, 0.96),
+        0 0 1rem rgba(249, 250, 247, 0.72);
     }
 
     .identity {
-      display: block;
+      position: relative;
+      width: max-content;
+      margin: -0.75rem;
+      padding: 0.75rem;
+      isolation: isolate;
+      touch-action: pan-y;
+    }
+
+    .name-canvas {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .identity.name-shader-ready h1 {
+      color: transparent;
+      text-shadow: none;
     }
 
     h1 {
@@ -268,6 +290,7 @@
 
     <div class="content">
       <header class="identity">
+        <canvas class="name-canvas" id="name-canvas" aria-hidden="true"></canvas>
         <h1 id="name">Evan Rose</h1>
       </header>
 
@@ -480,10 +503,146 @@ void main() {
 }
   </script>
 
+  <script id="name-fragment" type="x-shader/x-fragment">
+#version 300 es
+precision highp float;
+
+out vec4 outColor;
+uniform sampler2D u_src;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_progress;
+uniform vec2 u_name_mouse;
+uniform float u_name_hover;
+uniform float u_spot;
+
+const int TRAIL = 24;
+uniform vec2 u_trail[TRAIL];
+uniform float u_trail_weight[TRAIL];
+
+const float WIDTH = 0.18;
+const float LAYERS = 3.0;
+const vec3 ACCENT_A = vec3(0.16, 0.68, 0.88);
+const vec3 ACCENT_B = vec3(0.02, 0.25, 0.82);
+const vec3 BLOCK_BASE = vec3(0.73, 0.82, 0.76);
+
+float hash21(vec2 p) {
+  return fract(sin(dot(p, vec2(4859.0, 3985.0))) * 3984.0);
+}
+
+float sdBox(vec2 p, float radius) {
+  vec2 q = abs(p) - radius;
+  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+}
+
+vec4 readText(vec2 uv) {
+  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return vec4(0.0);
+  return texture(u_src, vec2(uv.x, 1.0 - uv.y));
+}
+
+vec2 pxToField(vec2 px) {
+  vec2 uv = px / u_resolution;
+  vec2 q = uv * 2.0 - 1.0;
+  q.y *= u_resolution.y / u_resolution.x;
+  return q;
+}
+
+float diagonalPosition(vec2 cellId, float scale) {
+  vec2 p = cellId / scale;
+  return dot(p, vec2(0.7071)) * 0.5 + 0.5;
+}
+
+vec4 cell(vec2 p, vec2 cellId, float scale, float scan, float edge) {
+  vec2 center = cellId + 0.5;
+  vec2 textureUv = center / scale;
+  textureUv.y /= u_resolution.y / u_resolution.x;
+  textureUv = textureUv * 0.5 + 0.5;
+  float glyph = smoothstep(0.0, 0.1, readText(textureUv).a);
+  if (glyph <= 0.0) return vec4(0.0);
+
+  float position = diagonalPosition(cellId, scale);
+  float random = hash21(cellId);
+  float spray = WIDTH * 2.2;
+  float blocks = 1.0 - smoothstep(0.0, WIDTH * 2.0, abs(position + random * spray - scan));
+
+  vec2 cellField = center / scale;
+  float wake = 0.0;
+  for (int i = 0; i < TRAIL; i++) {
+    float weight = u_trail_weight[i];
+    vec2 relative = cellField - pxToField(u_trail[i]);
+    float angle = atan(relative.y, relative.x);
+    float wobble = 1.0
+      + 0.30 * sin(3.0 * angle + u_time * 1.6)
+      + 0.16 * sin(5.0 * angle - u_time * 1.1 + 1.3);
+    float reach = u_spot * 0.8 * wobble;
+    float pool = 1.0 - smoothstep(reach * 0.4, reach, length(relative));
+    wake = max(wake, pool * weight);
+  }
+  blocks = max(blocks, wake * u_name_hover);
+
+  float tone = clamp(
+    0.5 + 0.36 * sin(u_time * 2.0 + random * 6.2831)
+        + 0.14 * sin(u_time * 3.7 + random * 12.566),
+    0.0,
+    1.0
+  );
+  vec3 accent = mix(ACCENT_A, ACCENT_B, tone);
+  vec4 color = vec4(mix(BLOCK_BASE, accent, blocks), 1.0) * blocks;
+
+  vec2 mouseField = pxToField(u_name_mouse);
+  float pull = u_name_hover * (1.0 - smoothstep(0.0, u_spot * 1.4, length(cellField - mouseField)));
+  vec2 magnet = normalize(mouseField - cellField + 0.00001) * pull * 0.18;
+  float box = sdBox(p - center - magnet, 0.38);
+  float edgeLight = clamp(0.18 / max(abs(box), 0.025), 0.0, 4.0);
+  color *= mix(1.0, edgeLight, edge * pow(blocks, 7.0));
+  color += vec4(accent, 1.0) * blocks * (1.0 - smoothstep(0.0, 0.55, abs(box))) * 0.07;
+  return color * glyph;
+}
+
+vec4 cellsColor(vec2 p, float scale, float scan) {
+  vec2 cellId = floor(p);
+  vec2 stepY = vec2(0.0, 1.0);
+  vec4 color = cell(p, cellId, scale, scan, 0.2) * 4.0;
+  color += cell(p, cellId + stepY, scale, scan, 0.9);
+  color += cell(p, cellId - stepY, scale, scan, 0.9);
+  color += cell(p, cellId + stepY.yx, scale, scan, 0.9);
+  color += cell(p, cellId - stepY.yx, scale, scan, 0.9);
+  return color / 8.0;
+}
+
+vec4 drawLayer(vec2 uv, vec2 p, float scan, float scale) {
+  vec4 solidText = readText(uv);
+  vec2 cellId = floor(p * scale);
+  float position = diagonalPosition(cellId, scale);
+  float random = hash21(cellId);
+  float revealed = 1.0 - smoothstep(scan - WIDTH, scan, position + random * WIDTH);
+  solidText *= revealed;
+  return solidText + cellsColor(p * scale, scale, scan) * 1.1;
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution;
+  vec2 p = uv * 2.0 - 1.0;
+  p.y *= u_resolution.y / u_resolution.x;
+  float scan = u_progress * 2.4 - 0.7;
+
+  vec4 color = vec4(0.0);
+  for (int i = 0; i < 3; i++) {
+    float layer = float(i);
+    float scale = abs(cos(layer) * 11.0 + 32.0);
+    color += drawLayer(uv, p, scan, scale);
+  }
+  outColor = color / LAYERS;
+  outColor *= smoothstep(-0.68, -0.64, scan);
+}
+  </script>
+
   <script>
     (() => {
       const body = document.body;
       const paper = document.getElementById('paper');
+      const identity = document.querySelector('.identity');
+      const nameLabel = document.getElementById('name');
       const motionButton = document.getElementById('motion-toggle');
       const textureButton = document.getElementById('texture-toggle');
       const pauseIcon = motionButton.querySelector('.pause-icon');
@@ -559,6 +718,217 @@ void main() {
         return { draw };
       }
 
+      function createNameRenderer(canvas, host, label) {
+        const gl = canvas.getContext('webgl2', {
+          alpha: true,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          premultipliedAlpha: false,
+          powerPreference: 'high-performance'
+        });
+        if (!gl) return null;
+
+        const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource);
+        const fragment = compile(gl, gl.FRAGMENT_SHADER, document.getElementById('name-fragment').textContent.trim());
+        if (!vertex || !fragment) return null;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertex);
+        gl.attachShader(program, fragment);
+        gl.linkProgram(program);
+        gl.deleteShader(vertex);
+        gl.deleteShader(fragment);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+
+        const uniformNames = [
+          'u_src',
+          'u_resolution',
+          'u_time',
+          'u_progress',
+          'u_name_mouse',
+          'u_name_hover',
+          'u_spot',
+          'u_trail[0]',
+          'u_trail_weight[0]'
+        ];
+        const uniforms = Object.fromEntries(
+          uniformNames.map(name => [name, gl.getUniformLocation(program, name)])
+        );
+
+        const texture = gl.createTexture();
+        const textCanvas = document.createElement('canvas');
+        const textContext = textCanvas.getContext('2d');
+        const labelStyle = getComputedStyle(label);
+        const labelColor = labelStyle.color;
+        let dpr = 1;
+        let measuredWidth = 0;
+        let measuredHeight = 0;
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        function resize() {
+          const hostRect = host.getBoundingClientRect();
+          const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+          const width = Math.max(1, Math.round(hostRect.width * nextDpr));
+          const height = Math.max(1, Math.round(hostRect.height * nextDpr));
+          if (width === measuredWidth && height === measuredHeight && nextDpr === dpr) return;
+
+          dpr = nextDpr;
+          measuredWidth = width;
+          measuredHeight = height;
+          canvas.width = width;
+          canvas.height = height;
+          textCanvas.width = width;
+          textCanvas.height = height;
+
+          const currentStyle = getComputedStyle(label);
+          const labelRect = label.getBoundingClientRect();
+          textContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+          textContext.clearRect(0, 0, hostRect.width, hostRect.height);
+          textContext.font = `${currentStyle.fontStyle} ${currentStyle.fontWeight} ${currentStyle.fontSize} ${currentStyle.fontFamily}`;
+          if ('letterSpacing' in textContext) textContext.letterSpacing = currentStyle.letterSpacing;
+          textContext.fillStyle = labelColor;
+          textContext.textAlign = 'left';
+          textContext.textBaseline = 'middle';
+          textContext.fillText(
+            label.textContent.trim(),
+            labelRect.left - hostRect.left,
+            labelRect.top - hostRect.top + labelRect.height * 0.5
+          );
+
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+          gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+        }
+
+        const trailSize = 24;
+        const trail = new Float32Array(trailSize * 2).fill(-10000);
+        const trailWeight = new Float32Array(trailSize);
+        const trailBorn = new Float32Array(trailSize).fill(-10000);
+        let head = 1;
+        let hoverTarget = 0;
+        let hover = 0;
+        let live = false;
+        let liveX = -10000;
+        let liveY = -10000;
+        let targetX = -10000;
+        let targetY = -10000;
+        let lastX = -10000;
+        let lastY = -10000;
+        let entranceStart = 0;
+        let animationTime = 0;
+        let ready = false;
+
+        function localPointer(event) {
+          const rect = host.getBoundingClientRect();
+          return {
+            x: (event.clientX - rect.left) * dpr,
+            y: (rect.height - (event.clientY - rect.top)) * dpr
+          };
+        }
+
+        host.addEventListener('pointerenter', event => {
+          const point = localPointer(event);
+          hoverTarget = 1;
+          live = true;
+          targetX = liveX = lastX = point.x;
+          targetY = liveY = lastY = point.y;
+        });
+        host.addEventListener('pointermove', event => {
+          const point = localPointer(event);
+          targetX = point.x;
+          targetY = point.y;
+        }, { passive: true });
+        host.addEventListener('pointerleave', () => {
+          hoverTarget = 0;
+          live = false;
+        });
+        host.addEventListener('pointerdown', event => {
+          if (event.pointerType === 'touch') entranceStart = animationTime;
+        });
+        canvas.addEventListener('webglcontextlost', event => {
+          event.preventDefault();
+          host.classList.remove('name-shader-ready');
+        });
+
+        const resizeObserver = 'ResizeObserver' in window
+          ? new ResizeObserver(() => { measuredWidth = 0; })
+          : null;
+        resizeObserver?.observe(host);
+        document.fonts?.ready.then(() => { measuredWidth = 0; });
+
+        function draw(state) {
+          resize();
+          animationTime = state.time;
+          const moving = !state.paused && !state.reduced;
+          const elapsed = Math.max(0, (state.time - entranceStart) / 2.6);
+          const entrance = Math.min(1, elapsed);
+          const progress = state.reduced ? 1 : 1 - (1 - entrance) * (1 - entrance);
+
+          if (moving) {
+            hover += (hoverTarget - hover) * 0.22;
+            liveX += (targetX - liveX) * 0.35;
+            liveY += (targetY - liveY) * 0.35;
+
+            if (live) {
+              const spacing = 3 * dpr;
+              let distance = Math.hypot(liveX - lastX, liveY - lastY);
+              let placed = 0;
+              while (distance >= spacing && placed < 4) {
+                const fraction = spacing / distance;
+                lastX += (liveX - lastX) * fraction;
+                lastY += (liveY - lastY) * fraction;
+                head = head + 1 >= trailSize ? 1 : head + 1;
+                trail[head * 2] = lastX;
+                trail[head * 2 + 1] = lastY;
+                trailBorn[head] = state.time;
+                distance = Math.hypot(liveX - lastX, liveY - lastY);
+                placed++;
+              }
+            }
+          }
+
+          trail[0] = liveX;
+          trail[1] = liveY;
+          trailWeight[0] = moving && live ? 1 : 0;
+          for (let i = 1; i < trailSize; i++) {
+            const age = Math.max(0, state.time - trailBorn[i]);
+            const life = Math.max(0, Math.min(1, 1 - age / 1.1));
+            trailWeight[i] = moving ? life * life * (3 - 2 * life) : 0;
+          }
+
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          gl.clearColor(0, 0, 0, 0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.useProgram(program);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.uniform1i(uniforms.u_src, 0);
+          gl.uniform2f(uniforms.u_resolution, canvas.width, canvas.height);
+          gl.uniform1f(uniforms.u_time, state.time);
+          gl.uniform1f(uniforms.u_progress, progress);
+          gl.uniform2f(uniforms.u_name_mouse, liveX, liveY);
+          gl.uniform1f(uniforms.u_name_hover, state.reduced ? 0 : hover);
+          gl.uniform1f(uniforms.u_spot, 0.28);
+          gl.uniform2fv(uniforms['u_trail[0]'], trail);
+          gl.uniform1fv(uniforms['u_trail_weight[0]'], trailWeight);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+          if (!ready) {
+            ready = true;
+            host.classList.add('name-shader-ready');
+          }
+        }
+
+        return { draw };
+      }
+
       const liquid = createRenderer(
         document.getElementById('liquid-canvas'),
         'liquid-fragment',
@@ -568,6 +938,11 @@ void main() {
         document.getElementById('dither-canvas'),
         'dither-fragment',
         true
+      );
+      const nameShader = createNameRenderer(
+        document.getElementById('name-canvas'),
+        identity,
+        nameLabel
       );
 
       if (liquid && dither) body.classList.add('webgl-ready');
@@ -634,6 +1009,10 @@ void main() {
           mouseY: state.targetY
         });
         if (dither) dither.draw(state);
+        if (nameShader) nameShader.draw({
+          ...state,
+          reduced: reduceMotion.matches
+        });
         requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);

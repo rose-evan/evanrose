@@ -11,12 +11,28 @@ test('loads the homepage directly without the terminal intro', () => {
   assert.doesNotMatch(html, /Personal index|identity-mark/);
 });
 
-test('renders the two shader layers', () => {
+test('renders the background, texture, and name shader layers', () => {
   assert.match(html, /id="liquid-canvas"/);
   assert.match(html, /id="dither-canvas"/);
+  assert.match(html, /id="name-canvas"/);
   assert.match(html, /id="liquid-fragment"/);
   assert.match(html, /id="dither-fragment"/);
+  assert.match(html, /id="name-fragment"/);
   assert.match(html, /getContext\('webgl2'/);
+});
+
+test('assembles the accessible name and gives the pointer a lasting block wake', () => {
+  assert.match(html, /uniform float u_progress/);
+  assert.match(html, /uniform vec2 u_trail\[TRAIL\]/);
+  assert.match(html, /const trailSize = 24/);
+  assert.match(html, /age \/ 1\.1/);
+  assert.match(html, /classList\.add\('name-shader-ready'\)/);
+  assert.match(html, /\.identity\.name-shader-ready h1\s*\{[^}]*color:\s*transparent/s);
+});
+
+test('keeps text legible beneath the moving dither texture', () => {
+  assert.match(html, /\.dither-canvas\s*\{[^}]*opacity:\s*0\.36/s);
+  assert.match(html, /\.content\s*\{[^}]*text-shadow:/s);
 });
 
 test('keeps the recommendation and contact destinations available', () => {
